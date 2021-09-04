@@ -10,6 +10,7 @@ public class Principal {
 		System.out.println("Prueba ");
 
 		System.out.println("Prueba 23");
+		int x = 128;
 
 	}
 

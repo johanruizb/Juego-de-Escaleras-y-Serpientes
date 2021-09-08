@@ -10,6 +10,7 @@ public class Principal {
 		// TableroJuego prueba = new TableroJuego();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
+				@SuppressWarnings("unused")
 				GUIEscaleraSerpientes gui = new GUIEscaleraSerpientes();
 			}
 		});

@@ -12,10 +12,14 @@ public class TableroJuego {
 	}
 
 	private void initTablero() {
+
+		int k = 1;
+
 		for (int i = 0; i < 10; i++) {
 			tablero.add(i, new ArrayList<Integer>(10));
 			for (int j = 0; j < 10; j++) {
-				tablero.get(i).add(0);
+				tablero.get(i).add(k);
+				k++;
 			}
 		}
 	}

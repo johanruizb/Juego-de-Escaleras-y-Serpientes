@@ -75,6 +75,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 			}
 		}
 
+		// AÑADIRLOS EN EL ORDEN NECESARIO
 		for (int i = 9; i >= 0; i--) {
 			for (int j = 9; j >= 0 && ((i + 1) % 2) != 0; j--) {
 				tableroJuego.add(tablero.get(j + k));
@@ -93,22 +94,15 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 		}
 
-//		 tableroJuego.add(dibujo);
-		// repaint();
+		// -----
 
 		tableroJuego.setBounds(18, 6, 400, 400);
 
 		capas.add(tableroJuego, new Integer(1));
-//		capas.add(dibujo, new Integer(2));
-
-		capas.setAlignmentX(JLayeredPane.CENTER_ALIGNMENT);
-
-//		contenedor.add(capas, BorderLayout.CENTER);
+		// capas.add(dibujo, new Integer(2));
 
 		add(capas, BorderLayout.CENTER);
 
-//		add(dibujo, BorderLayout.CENTER);
-//		add(tableroJuego, BorderLayout.CENTER);
 	}
 
 }

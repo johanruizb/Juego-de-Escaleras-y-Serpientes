@@ -34,4 +34,8 @@ public class TableroJuego {
 		}
 	}
 
+	public ArrayList<ArrayList<Integer>> getTablero() {
+		return tablero;
+	}
+
 }

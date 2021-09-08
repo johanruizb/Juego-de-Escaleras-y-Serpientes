@@ -2,67 +2,96 @@ package escalerasSerpientes;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Shape;
 import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Point2D;
 
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-
-import java.awt.Stroke;
 
 public class Dibujo extends JPanel {
 
-	private Image serpiente, escalera, snake;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7794229655855274126L;
+	private boolean pintar = false;
 
 	public Dibujo() {
-
-//		this.setBackground(Color.BLUE.brighter().brighter().brighter());
-		this.serpiente = new ImageIcon("src/imagenes/serpiente.png").getImage();
-		this.escalera = new ImageIcon("src/imagenes/escalera.png").getImage();
-		this.snake = new ImageIcon("src/imagenes/snake.png").getImage();
+		this.setPreferredSize(new Dimension(360, 400));
 	}
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		// g.drawImage(escalera,10,20, 80, 100, this);
-		// g.drawImage(serpiente, 80, 50, 50, 300, this);
-//		g.drawImage(serpiente, 0, 0, 200, 200, this);
+		if (pintar) {
 
-		CubicCurve2D.Double cubic = new CubicCurve2D.Double();
-		Point2D.Double start, end, uno, dos;
-		start = new Point2D.Double();
+			int xInicio = 150, yInicio = 20;
+			int xFin = 50, yFin = 150;
 
-		start.x = 10;
-		start.y = 10;
+			// SERPIENTE
 
-		uno = new Point2D.Double();
+			// CUERPO
+			g.setColor(Color.red.darker());
+			CubicCurve2D.Double cubic = new CubicCurve2D.Double();
+			Point2D.Double start, end, uno, dos;
+			// INICIO - CUERPO
+			start = new Point2D.Double();
+			start.x = xInicio;
+			start.y = yInicio;
 
-		uno.x = 100;
-		uno.y = 10;
+			// CURVA 1
+			uno = new Point2D.Double();
+			uno.x = xFin;
+			uno.y = yInicio;
 
-		dos = new Point2D.Double();
+			// CURVA 2
+			dos = new Point2D.Double();
+			dos.x = xInicio;
+			dos.y = yFin;
 
-		dos.x = 10;
-		dos.y = 100;
+			// FIN - CUERPO
+			end = new Point2D.Double();
+			end.x = xFin;
+			end.y = yFin;
 
-		end = new Point2D.Double();
+			cubic.setCurve(start, uno, dos, end);
 
-		end.x = 100;
-		end.y = 100;
+			// PINTANDO CUERPO
+			((Graphics2D) g).setStroke(new BasicStroke(10));
+			((Graphics2D) g).draw(cubic);
 
-		cubic.setCurve(start, uno, dos, end);
+			// BOCA
+			g.setColor(Color.RED);
+			if (xInicio > xFin) {
+				g.fillRect(xInicio + 20, yInicio, 15, 2);
+			} else {
+				g.fillRect(xInicio - 24, yInicio, 15, 2);
+			}
 
-		g.setColor(Color.GREEN.darker());
+			// CABEZA
+			g.setColor(Color.red.darker());
+			g.fillOval(xInicio - 10, yInicio - 6, 30, 15);
 
-		g.fillOval(0, 0, 25, 25);
+			// COLA
+			g.fillOval(xFin - 10, yFin - 6, 30, 10);
 
-		((Graphics2D) g).setStroke(new BasicStroke(10));
-		((Graphics2D) g).draw(cubic);
+			// OJOS
+			g.setColor(Color.WHITE);
+			if (xInicio > xFin) {
+				g.fillOval(xInicio + 4, yInicio - 5, 5, 5);
+				g.fillOval(xInicio + 4, yInicio + 2, 5, 5);
+			} else {
+				g.fillOval(xInicio - 4, yInicio - 5, 5, 5);
+				g.fillOval(xInicio - 4, yInicio + 2, 5, 5);
+			}
+
+		}
+	}
+
+	public void setPintar(boolean pintar) {
+		this.pintar = pintar;
 	}
 
 }

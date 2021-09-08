@@ -57,11 +57,11 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 		ArrayList<ArrayList<Integer>> t2 = t1.getTablero();
 
-		int k = 0;
+		int k = 0, m = 0;
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 9; i >= 0; i--) {
 
-			for (int j = 0; j < 10; j++) {
+			for (int j = 9; j >= 0; j--) {
 
 				JLabel temp = new JLabel();
 				temp.setText(String.valueOf(t2.get(i).get(j)));
@@ -72,9 +72,25 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 				tablero.add(temp);
 
-				tableroJuego.add(tablero.get(k));
-				k++;
 			}
+		}
+
+		for (int i = 9; i >= 0; i--) {
+			for (int j = 9; j >= 0 && ((i + 1) % 2) != 0; j--) {
+				tableroJuego.add(tablero.get(j + k));
+
+//				System.out.println("Añadiendo 0 - " + tablero.get(j + k).getText());
+			}
+
+			k += 10;
+
+			for (int n = 0; n < 10 && ((i + 1) % 2) == 0; n++) {
+				tableroJuego.add(tablero.get(n + m));
+
+//				System.out.println("Añadiendo 1 - " + tablero.get(n + m).getText());
+			}
+			m += 10;
+
 		}
 
 //		 tableroJuego.add(dibujo);
@@ -83,7 +99,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 		tableroJuego.setBounds(18, 6, 400, 400);
 
 		capas.add(tableroJuego, new Integer(1));
-		capas.add(dibujo, new Integer(2));
+//		capas.add(dibujo, new Integer(2));
 
 		capas.setAlignmentX(JLayeredPane.CENTER_ALIGNMENT);
 

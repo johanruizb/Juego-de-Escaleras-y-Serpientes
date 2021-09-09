@@ -47,12 +47,12 @@ public class EscalerasSerpientes {
 		// TODO Auto-generated method stub
 		Random temp = new Random();
 
-		int randomN1 = temp.nextInt(5) + 18;
-		int randomN2 = temp.nextInt(4) + 13;
+		int randomN1 = temp.nextInt(5) + 25;
+		int randomN2 = 18;
 
 		int zona = 0;
 
-		while (!(serpientes.size() == 5)) {
+		while (!(serpientes.size() == 6)) {
 
 			ArrayList<Integer> temporal = new ArrayList<Integer>(2);
 
@@ -61,10 +61,10 @@ public class EscalerasSerpientes {
 			temporal.add(randomN1);
 			temporal.add(randomN1 - randomN2);
 
-			zona += randomN2 * 1.1;
+			zona += 11;
 
-			randomN1 = temp.nextInt(5) + (18 + zona);
-			randomN2 = temp.nextInt(4) + 13;
+			randomN1 = temp.nextInt(5) + (25 + zona);
+//			randomN2 = temp.nextInt(4) + 9;
 
 			serpientes.add(temporal);
 //			temporal.clear();

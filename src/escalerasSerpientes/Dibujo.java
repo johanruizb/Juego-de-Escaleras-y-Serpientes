@@ -38,7 +38,7 @@ public class Dibujo extends JPanel {
 
 		Random random1 = new Random();
 
-		for (int i = serpientes.size() - 1; serpientes.size() > 0 && (i > 0); i--) {
+		for (int i = serpientes.size() - 1; serpientes.size() > 0 && (i >= 0); i--) {
 
 			int color1 = random1.nextInt(colores.size());
 

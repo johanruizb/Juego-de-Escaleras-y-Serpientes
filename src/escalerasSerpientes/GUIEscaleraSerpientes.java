@@ -79,7 +79,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 		ArrayList<ArrayList<Integer>> auxPoint = new ArrayList<>();
 		serpientes.addAll(t1.getSerpientes());
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < serpientes.size(); i++) {
 			int fila = -1;
 			int columna = -1;
 
@@ -102,8 +102,8 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 				columna = t2.get(fila).indexOf(serpientes.get(i).get(j));
 
-//				System.out.println("encontrado en " + fila + ", " + columna);
-//				System.out.println("posicion " + (fila * 20) + "-" + (columna * 20));
+				System.out.println("encontrado en " + fila + ", " + columna);
+				System.out.println("posicion " + (fila * 20) + "-" + (columna * 20));
 				auxPoint.get(i).add((columna * 40) + 30);
 				auxPoint.get(i).add((fila * 40) + 30);
 			}
@@ -115,11 +115,11 @@ public class GUIEscaleraSerpientes extends JFrame {
 		// ---
 
 		tableroJuego.setBounds(18, 6, 400, 400);
-		capas.add(tableroJuego, new Integer(1));
+		capas.add(tableroJuego, new Integer(2));
 
 //		dibujo = new Dibujo();
 		dibujo.setSize(500, 500);
-		capas.add(dibujo, new Integer(2));
+		capas.add(dibujo, new Integer(1));
 
 		add(capas, BorderLayout.CENTER);
 

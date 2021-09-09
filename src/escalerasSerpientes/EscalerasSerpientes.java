@@ -5,25 +5,79 @@ import java.util.Random;
 
 public class EscalerasSerpientes {
 
-	private ArrayList<ArrayList<Integer>> escaleras, serpientes;
+	private ArrayList<ArrayList<Integer>> escaleras = new ArrayList<ArrayList<Integer>>(),
+			serpientes = new ArrayList<ArrayList<Integer>>();
 
 	public EscalerasSerpientes() {
 		// TODO Auto-generated constructor stub
-		initEscaleras();
+//		initEscaleras();
+		initSerpientes();
 	}
 
 	private void initEscaleras() {
 		// TODO Auto-generated method stub
-
+		int zona = 0, i = 0;
 		Random temp = new Random();
 
-		int zona = 0, temp1 = temp.nextInt(5) + 10, i = 0;
+		int randomN1 = temp.nextInt(3) + 5;
+		int randomN2 = temp.nextInt(5) + 8;
 
-		while (!(escaleras.size() == 4)) {
+		ArrayList<Integer> temporal = new ArrayList<Integer>(2);
+
+		while (!(escaleras.size() == 6)) {
+
+//			System.out.println(randomN1 + "==" + (randomN2 + randomN1));
+
+			temporal.add(randomN1);
+			temporal.add(randomN1 + randomN2);
+
+			zona += randomN2 * 1.4;
+
+//			System.out.println("Zona permitida " + zona + "+");
+
+			randomN1 = temp.nextInt(3) + 5 + zona;
+			randomN2 = temp.nextInt(5) + 8;
+
+			escaleras.add(temporal);
+			temporal.clear();
+		}
+	}
+
+	private void initSerpientes() {
+		// TODO Auto-generated method stub
+		Random temp = new Random();
+
+		int randomN1 = temp.nextInt(5) + 18;
+		int randomN2 = temp.nextInt(4) + 13;
+
+		int zona = 0;
+
+		while (!(serpientes.size() == 5)) {
+
 			ArrayList<Integer> temporal = new ArrayList<Integer>(2);
-			// [12,23]
-			// [33,22]
+
+			System.out.println(randomN1 + "++" + (randomN1 - randomN2));
+
+			temporal.add(randomN1);
+			temporal.add(randomN1 - randomN2);
+
+			zona += randomN2 * 1.1;
+
+			randomN1 = temp.nextInt(5) + (18 + zona);
+			randomN2 = temp.nextInt(4) + 13;
+
+			serpientes.add(temporal);
+//			temporal.clear();
 		}
 
 	}
+
+	public ArrayList<ArrayList<Integer>> getEscaleras() {
+		return escaleras;
+	}
+
+	public ArrayList<ArrayList<Integer>> getSerpientes() {
+		return serpientes;
+	}
+
 }

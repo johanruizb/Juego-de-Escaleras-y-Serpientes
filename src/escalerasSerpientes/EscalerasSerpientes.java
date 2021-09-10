@@ -54,7 +54,7 @@ public class EscalerasSerpientes {
 
 		while (!(serpientes.size() == 7)) {
 
-			if (!isContained(randomN1) && !isContained(randomN1 + 18)) {
+			if (!isContained(randomN1) && !isContained(randomN1 - 18)) {
 				ArrayList<Integer> temporal = new ArrayList<Integer>(2);
 
 				System.out.println(randomN1 + "++" + (randomN1 - randomN2));
@@ -69,6 +69,8 @@ public class EscalerasSerpientes {
 
 				serpientes.add(temporal);
 //				temporal.clear();
+			} else {
+				randomN1 = temp.nextInt(5) + (25 + zona);
 			}
 
 		}

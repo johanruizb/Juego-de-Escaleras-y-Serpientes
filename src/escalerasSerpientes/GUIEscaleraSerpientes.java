@@ -115,7 +115,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 		// ---
 
 		tableroJuego.setBounds(18, 6, 400, 400);
-		capas.add(tableroJuego, new Integer(2));
+//		capas.add(tableroJuego, new Integer(2));
 
 //		dibujo = new Dibujo();
 		dibujo.setSize(500, 500);

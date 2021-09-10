@@ -36,8 +36,35 @@ public class Dibujo extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		Random random1 = new Random();
+		int x1Inicio = 50, y1Inicio = x1Inicio, x1Fin = 150, y1Fin = 150;
 
+		int x2Inicio = x1Inicio + 20, y2Inicio = y1Inicio, x2Fin = x1Fin + 20, y2Fin = y1Fin;
+
+		double d = Math.sqrt(Math.pow((x1Inicio - x1Fin), 2) + Math.pow((y1Inicio - y1Fin), 2));
+
+		System.out.println("Distancia " + (d / 6 - 2));
+
+		int divisiones = (int) d;
+
+		((Graphics2D) g).setStroke(new BasicStroke(3));
+		g.drawLine(x1Inicio, y1Inicio, x1Fin + 6, y1Fin + 6);
+		g.drawLine(x2Inicio - 6, y2Inicio - 6, x2Fin, y2Fin);
+
+		for (int i = 0; i < divisiones / 8; i++) {
+			g.drawLine(x1Inicio + 6, y1Inicio + 6, x1Inicio + 20, y1Inicio);
+			x1Inicio += 6;
+			y1Inicio += 6;
+
+//			System.out.println(xInicio);
+		}
+
+//		dibujarSerpientes(g);
+
+	}
+
+	private void dibujarSerpientes(Graphics g) {
+		// TODO Auto-generated method stub
+		Random random1 = new Random();
 		for (int i = serpientes.size() - 1; serpientes.size() > 0 && (i >= 0); i--) {
 
 			int color1 = random1.nextInt(colores.size());

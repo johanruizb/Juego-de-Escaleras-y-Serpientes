@@ -19,24 +19,20 @@ public class EscalerasSerpientes {
 		int zona = 0, i = 0;
 		Random temp = new Random();
 
-		int randomN1 = temp.nextInt(3) + 5;
-		int randomN2 = temp.nextInt(5) + 8;
+		int randomN1 = temp.nextInt(5) + 10;
+		int randomN2 = 10;
 
 		ArrayList<Integer> temporal = new ArrayList<Integer>(2);
 
 		while (!(escaleras.size() == 6)) {
-
-//			System.out.println(randomN1 + "==" + (randomN2 + randomN1));
 
 			temporal.add(randomN1);
 			temporal.add(randomN1 + randomN2);
 
 			zona += randomN2 * 1.4;
 
-//			System.out.println("Zona permitida " + zona + "+");
-
 			randomN1 = temp.nextInt(3) + 5 + zona;
-			randomN2 = temp.nextInt(5) + 8;
+//			randomN2 = temp.nextInt(5) + 8;
 
 			escaleras.add(temporal);
 			temporal.clear();
@@ -48,27 +44,25 @@ public class EscalerasSerpientes {
 		Random temp = new Random();
 
 		int randomN1 = temp.nextInt(5) + 25;
-		int randomN2 = 18;
+		int reduce = 18;
 
 		int zona = 0;
 
-		while (!(serpientes.size() == 7)) {
+		while (!(serpientes.size() == 5)) {
 
-			if (!isContained(randomN1) && !isContained(randomN1 - 18)) {
+			if (!isContained(randomN1, serpientes) && !isContained(randomN1 - 18, serpientes)) {
 				ArrayList<Integer> temporal = new ArrayList<Integer>(2);
 
-				System.out.println(randomN1 + "++" + (randomN1 - randomN2));
+				System.out.println(randomN1 + "++" + (randomN1 - reduce));
 
 				temporal.add(randomN1);
-				temporal.add(randomN1 - randomN2);
+				temporal.add(randomN1 - reduce);
 
 				zona += 11;
 
 				randomN1 = temp.nextInt(5) + (25 + zona);
-//				randomN2 = temp.nextInt(4) + 9;
 
 				serpientes.add(temporal);
-//				temporal.clear();
 			} else {
 				randomN1 = temp.nextInt(5) + (25 + zona);
 			}
@@ -77,8 +71,8 @@ public class EscalerasSerpientes {
 
 	}
 
-	private boolean isContained(Integer in) {
-		for (ArrayList<Integer> lista : serpientes) {
+	private boolean isContained(Integer in, ArrayList<ArrayList<Integer>> array) {
+		for (ArrayList<Integer> lista : array) {
 			for (Integer integ : lista) {
 				if (integ == in)
 					return true;

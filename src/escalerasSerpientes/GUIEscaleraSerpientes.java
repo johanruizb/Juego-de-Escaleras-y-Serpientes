@@ -102,8 +102,8 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 				columna = t2.get(fila).indexOf(serpientes.get(i).get(j));
 
-				System.out.println("encontrado en " + fila + ", " + columna);
-				System.out.println("posicion " + (fila * 20) + "-" + (columna * 20));
+//				System.out.println("encontrado en " + fila + ", " + columna);
+//				System.out.println("posicion " + (fila * 20) + "-" + (columna * 20));
 				auxPoint.get(i).add((columna * 40) + 30);
 				auxPoint.get(i).add((fila * 40) + 30);
 			}

@@ -7,6 +7,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Point2D;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -36,7 +38,7 @@ public class Dibujo extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		int x1Inicio = 50, y1Inicio = x1Inicio, x1Fin = 150, y1Fin = 150;
+		int x1Inicio = 20, y1Inicio = 60, x1Fin = 150, y1Fin = 150;
 
 		int x2Inicio = x1Inicio + 20, y2Inicio = y1Inicio, x2Fin = x1Fin + 20, y2Fin = y1Fin;
 
@@ -50,9 +52,15 @@ public class Dibujo extends JPanel {
 		g.drawLine(x1Inicio, y1Inicio, x1Fin + 6, y1Fin + 6);
 		g.drawLine(x2Inicio - 6, y2Inicio - 6, x2Fin, y2Fin);
 
-		for (int i = 0; i < divisiones / 8; i++) {
-			g.drawLine(x1Inicio + 6, y1Inicio + 6, x1Inicio + 20, y1Inicio);
-			x1Inicio += 6;
+		double a1 = (y1Inicio + y1Fin), a2 = (x1Fin + x1Inicio), a = a1 / a2;
+
+		int aux = (int) Math.ceil((a - 1));
+
+		System.out.println("Pendiente " + a + " aux " + aux);
+
+		for (int i = 0; i < (divisiones / 8) - (2 * aux); i++) {
+			g.drawLine((x1Inicio + 6) + 5, y1Inicio + 6, x1Inicio + 20, y1Inicio);
+			x1Inicio += 6 + (1 * aux);
 			y1Inicio += 6;
 
 //			System.out.println(xInicio);

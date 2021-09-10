@@ -52,24 +52,37 @@ public class EscalerasSerpientes {
 
 		int zona = 0;
 
-		while (!(serpientes.size() == 6)) {
+		while (!(serpientes.size() == 7)) {
 
-			ArrayList<Integer> temporal = new ArrayList<Integer>(2);
+			if (!isContained(randomN1) && !isContained(randomN1 + 18)) {
+				ArrayList<Integer> temporal = new ArrayList<Integer>(2);
 
-			System.out.println(randomN1 + "++" + (randomN1 - randomN2));
+				System.out.println(randomN1 + "++" + (randomN1 - randomN2));
 
-			temporal.add(randomN1);
-			temporal.add(randomN1 - randomN2);
+				temporal.add(randomN1);
+				temporal.add(randomN1 - randomN2);
 
-			zona += 11;
+				zona += 11;
 
-			randomN1 = temp.nextInt(5) + (25 + zona);
-//			randomN2 = temp.nextInt(4) + 9;
+				randomN1 = temp.nextInt(5) + (25 + zona);
+//				randomN2 = temp.nextInt(4) + 9;
 
-			serpientes.add(temporal);
-//			temporal.clear();
+				serpientes.add(temporal);
+//				temporal.clear();
+			}
+
 		}
 
+	}
+
+	private boolean isContained(Integer in) {
+		for (ArrayList<Integer> lista : serpientes) {
+			for (Integer integ : lista) {
+				if (integ == in)
+					return true;
+			}
+		}
+		return false;
 	}
 
 	public ArrayList<ArrayList<Integer>> getEscaleras() {

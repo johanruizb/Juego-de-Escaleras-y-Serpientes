@@ -110,12 +110,49 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 		}
 
-		dibujo = new Dibujo(auxPoint);
+		ArrayList<ArrayList<Integer>> escaleras = new ArrayList<ArrayList<Integer>>();
+		ArrayList<ArrayList<Integer>> auxPoint2 = new ArrayList<>();
+		escaleras.addAll(t1.getEscaleras());
+
+		for (int i = 0; i < escaleras.size(); i++) {
+			int fila = -1;
+			int columna = -1;
+
+			auxPoint2.add(new ArrayList<>());
+
+			for (int j = 0; j < 2; j++) {
+				if (String.valueOf(escaleras.get(i).get(j)).length() > 1 && escaleras.get(i).get(j) % 10 != 0) {
+					fila = 9 - Integer.parseInt(String.valueOf(escaleras.get(i).get(j)).substring(0, 1));
+//					System.out.println("Index " + fila);
+
+				} else if (String.valueOf(escaleras.get(i).get(j)).length() == 1 || escaleras.get(i).get(j) == 10) {
+					fila = 9;
+//					System.out.println("Index " + fila);
+
+				} else if (escaleras.get(i).get(j) % 10 == 0) {
+					fila = 10 - Integer.parseInt(String.valueOf(escaleras.get(i).get(j)).substring(0, 1));
+
+//					System.out.println("Index " + fila);
+				}
+
+				columna = t2.get(fila).indexOf(escaleras.get(i).get(j));
+
+//				System.out.println("encontrado en " + fila + ", " + columna);
+//				System.out.println("posicion " + ((fila * 40) + 20) + "-" + ((columna * 40) + 20));
+
+				auxPoint2.get(i).add((columna * 40) + 20);
+				auxPoint2.get(i).add((fila * 40) + 20);
+
+			}
+
+		}
+
+		dibujo = new Dibujo(auxPoint, auxPoint2);
 
 		// ---
 
 		tableroJuego.setBounds(18, 6, 400, 400);
-//		capas.add(tableroJuego, new Integer(2));
+		capas.add(tableroJuego, new Integer(2));
 
 //		dibujo = new Dibujo();
 		dibujo.setSize(500, 500);

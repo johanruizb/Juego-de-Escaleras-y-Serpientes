@@ -25,7 +25,7 @@ public class EscalerasSerpientes {
 
 		while (!(escaleras.size() == 5)) {
 
-			if (!isContained(randomN1, serpientes, escaleras) && !isContained(randomN1 + 15, serpientes, escaleras)) {
+			if (!isContained(randomN1, serpientes, escaleras) && !isContained(randomN1 + 18, serpientes, escaleras)) {
 
 				ArrayList<Integer> temporal = new ArrayList<Integer>(2);
 

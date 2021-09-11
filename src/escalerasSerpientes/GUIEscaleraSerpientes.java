@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
+
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -66,14 +67,12 @@ public class GUIEscaleraSerpientes extends JFrame {
 			}
 		}
 
-		// EXTRAER POSICIONES ESCALERAS Y SERPIENTES
-
+		// EXTRAER POSICIONES EN PIXELES DE ESCALERAS Y SERPIENTES
 		ArrayList<ArrayList<Integer>> auxPoint = new ArrayList<>();
 		auxPoint.addAll(posicionSerpientes());
 
 		ArrayList<ArrayList<Integer>> auxPoint2 = new ArrayList<>();
 		auxPoint2.addAll(posicionEscaleras());
-
 		// ---
 		// DIBUJO
 		dibujo = new Dibujo(auxPoint, auxPoint2);

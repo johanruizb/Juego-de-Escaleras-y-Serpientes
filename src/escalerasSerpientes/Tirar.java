@@ -9,7 +9,7 @@ import javax.swing.JFrame;
 
 public class Tirar extends JFrame {
 	private Sonido sonido;
-	private MediaPlay play;
+	//private MediaPlay play;
 	public Tirar() {
 		initGUI();
 		this.setTitle("Esacaleras y Serpientes");
@@ -23,7 +23,7 @@ public class Tirar extends JFrame {
 	private void initGUI() {
 		// TODO Auto-generated method stub
 		sonido = new Sonido();
-		play = new MediaPlay();
+		//play = new MediaPlay();
 		JButton b = new JButton("Reproducir");
 		b.addActionListener(new ActionListener() {
 
@@ -31,7 +31,7 @@ public class Tirar extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 //				sonido.reproductorMusic("audio1");
-			play.MediaPlay("audio2.mp3");
+			//play.MediaPlay("audio2.mp3");
 				
 			}
 			

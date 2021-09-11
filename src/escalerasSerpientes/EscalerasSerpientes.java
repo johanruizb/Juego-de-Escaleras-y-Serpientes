@@ -10,32 +10,33 @@ public class EscalerasSerpientes {
 
 	public EscalerasSerpientes() {
 		// TODO Auto-generated constructor stub
-//		initEscaleras();
+		initEscaleras();
 		initSerpientes();
 	}
 
 	private void initEscaleras() {
 		// TODO Auto-generated method stub
-		int zona = 0, i = 0;
 		Random temp = new Random();
 
 		int randomN1 = temp.nextInt(5) + 10;
-		int randomN2 = 10;
+		int aumenta = 18;
 
-		ArrayList<Integer> temporal = new ArrayList<Integer>(2);
+		int zona = 0;
 
-		while (!(escaleras.size() == 6)) {
+		while (!(escaleras.size() == 5)) {
 
-			temporal.add(randomN1);
-			temporal.add(randomN1 + randomN2);
+			if (!isContained(randomN1, serpientes, escaleras) && !isContained(randomN1 + 15, serpientes, escaleras)) {
 
-			zona += randomN2 * 1.4;
+				ArrayList<Integer> temporal = new ArrayList<Integer>(2);
 
-			randomN1 = temp.nextInt(3) + 5 + zona;
-//			randomN2 = temp.nextInt(5) + 8;
+				temporal.add(randomN1);
+				temporal.add(randomN1 + aumenta);
 
-			escaleras.add(temporal);
-			temporal.clear();
+				zona += 11;
+
+				escaleras.add(temporal);
+			}
+			randomN1 = temp.nextInt(5) + 18 + zona;
 		}
 	}
 
@@ -50,34 +51,39 @@ public class EscalerasSerpientes {
 
 		while (!(serpientes.size() == 5)) {
 
-			if (!isContained(randomN1, serpientes) && !isContained(randomN1 - 18, serpientes)) {
-				ArrayList<Integer> temporal = new ArrayList<Integer>(2);
+			if (!isContained(randomN1, serpientes, escaleras) && !isContained(randomN1 - 18, serpientes, escaleras)) {
 
-				System.out.println(randomN1 + "++" + (randomN1 - reduce));
+				ArrayList<Integer> temporal = new ArrayList<Integer>(2);
 
 				temporal.add(randomN1);
 				temporal.add(randomN1 - reduce);
 
 				zona += 11;
 
-				randomN1 = temp.nextInt(5) + (25 + zona);
-
 				serpientes.add(temporal);
-			} else {
-				randomN1 = temp.nextInt(5) + (25 + zona);
 			}
+			randomN1 = temp.nextInt(5) + (25 + zona);
 
 		}
 
 	}
 
-	private boolean isContained(Integer in, ArrayList<ArrayList<Integer>> array) {
+	private boolean isContained(Integer in, ArrayList<ArrayList<Integer>> array, ArrayList<ArrayList<Integer>> array2) {
+
 		for (ArrayList<Integer> lista : array) {
 			for (Integer integ : lista) {
 				if (integ == in)
 					return true;
 			}
 		}
+
+		for (ArrayList<Integer> lista : array2) {
+			for (Integer integ : lista) {
+				if (integ == in)
+					return true;
+			}
+		}
+
 		return false;
 	}
 

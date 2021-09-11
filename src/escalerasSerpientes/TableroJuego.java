@@ -84,4 +84,8 @@ public class TableroJuego {
 		return escaleraSerpiente.getSerpientes();
 	}
 
+	public ArrayList<ArrayList<Integer>> getEscaleras() {
+		return escaleraSerpiente.getEscaleras();
+	}
+
 }

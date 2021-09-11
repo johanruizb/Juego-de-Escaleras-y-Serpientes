@@ -22,51 +22,79 @@ public class Dibujo extends JPanel {
 	 */
 	private static final long serialVersionUID = 7794229655855274126L;
 	private ArrayList<ArrayList<Integer>> serpientes = new ArrayList<ArrayList<Integer>>();
+	private ArrayList<ArrayList<Integer>> escaleras = new ArrayList<ArrayList<Integer>>();
 
 	private ArrayList<Color> colores = new ArrayList<>(
 			Arrays.asList(Color.BLACK, Color.BLUE, Color.CYAN, Color.GRAY, Color.GREEN));
 
-	public Dibujo(ArrayList<ArrayList<Integer>> auxPoint) {
-
+	public Dibujo(ArrayList<ArrayList<Integer>> auxPoint, ArrayList<ArrayList<Integer>> auxPoint2) {
 		serpientes.addAll(auxPoint);
-
-//		this.setPreferredSize(new Dimension(400, 400));
+		escaleras.addAll(auxPoint2);
 		this.setOpaque(false);
-//		this.setBackground(new Color(0, 0, 0));
 	}
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		int x1Inicio = 20, y1Inicio = 60, x1Fin = 150, y1Fin = 150;
+		dibujarEscaleras(g);
+		dibujarSerpientes(g);
+	}
 
-		int x2Inicio = x1Inicio + 20, y2Inicio = y1Inicio, x2Fin = x1Fin + 20, y2Fin = y1Fin;
+	private void dibujarEscaleras(Graphics g) {
+		// TODO Auto-generated method stub
+		for (int i = 0; escaleras.size() > 0 && (i < escaleras.size()); i++) {
 
-		double d = Math.sqrt(Math.pow((x1Inicio - x1Fin), 2) + Math.pow((y1Inicio - y1Fin), 2));
+			// BASES
 
-		System.out.println("Distancia " + (d / 6 - 2));
+			// POSICIONES INCIALES DE LAS BASES
+			int x1Inicio = escaleras.get(i).get(2), y1Inicio = escaleras.get(i).get(3), x1Fin = escaleras.get(i).get(0),
+					y1Fin = escaleras.get(i).get(1);
+			int x2Inicio = x1Inicio + 20, y2Inicio = y1Inicio, x2Fin = x1Fin + 20, y2Fin = y1Fin;
+			int y1Copy = y1Inicio, y2Copy = y2Inicio;
 
-		int divisiones = (int) d;
+			// DISTANCIA
+			double d1 = Math.sqrt(Math.pow((x1Inicio - x1Fin), 2) + Math.pow((y1Inicio - y1Fin), 2));
 
-		((Graphics2D) g).setStroke(new BasicStroke(3));
-		g.drawLine(x1Inicio, y1Inicio, x1Fin + 6, y1Fin + 6);
-		g.drawLine(x2Inicio - 6, y2Inicio - 6, x2Fin, y2Fin);
+			// ESPACIO ENTRE ESCALONES
+			int espacioEscalones;
+			espacioEscalones = (int) Math.ceil(d1 / 15) - 1;
 
-		double a1 = (y1Inicio + y1Fin), a2 = (x1Fin + x1Inicio), a = a1 / a2;
+			// DIBUJAR BASES
+			g.setColor(Color.BLACK);
+			((Graphics2D) g).setStroke(new BasicStroke(3));
+			g.drawLine(x1Inicio, y1Inicio, x1Fin, y1Fin);
+			g.drawLine(x2Inicio, y2Inicio, x2Fin, y2Fin);
 
-		int aux = (int) Math.ceil((a - 1));
+			// ESCALONES
 
-		System.out.println("Pendiente " + a + " aux " + aux);
+			// CALCULOS PARA LOS ESCALONES
+			double a1 = (y1Inicio - y1Fin), a2 = (x1Fin - x1Inicio), m1 = a1 / a2;
+			double b1 = (y2Inicio - y2Fin), b2 = (x2Fin - x2Inicio), m2 = b1 / b2;
+			double n1 = y1Inicio - (m1 * x1Inicio);
+			double n2 = y2Inicio - (m2 * x2Inicio);
 
-		for (int i = 0; i < (divisiones / 8) - (2 * aux); i++) {
-			g.drawLine((x1Inicio + 6) + 5, y1Inicio + 6, x1Inicio + 20, y1Inicio);
-			x1Inicio += 6 + (1 * aux);
-			y1Inicio += 6;
+			// PINTAR ESCALONES
+			for (int j = 0; j < (espacioEscalones); j++) {
 
-//			System.out.println(xInicio);
+				y1Copy -= 10;
+				y2Copy -= 10;
+
+				double isX1 = (((y1Copy) - n1) / m1);
+				double isX2 = (((y2Copy) - n2) / m2);
+
+				y1Inicio += 10;
+				y2Inicio += 10;
+
+				x1Inicio = (int) Math.round(isX1);
+				x2Inicio = (int) Math.floor(isX2);
+
+				// Correccion de posicion;
+				x2Inicio -= 1;
+				// ---
+
+				g.drawLine(x1Inicio, y1Inicio, x2Inicio, y2Inicio);
+			}
 		}
-
-//		dibujarSerpientes(g);
 
 	}
 

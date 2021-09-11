@@ -15,7 +15,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 // Clase qiue reproduce un archivo wav esta funcionando
 public class Sonido {
 	private AudioInputStream entrada;
-	private MediaPlayer repro;
+	
 
 	/*
 	 * public void reproductorMusic(String name) {
@@ -36,7 +36,4 @@ public class Sonido {
 	 * }
 	 */
 
-	public void MediaPlayer() {
-		repro = new MediaPlayer();
-	}
 }

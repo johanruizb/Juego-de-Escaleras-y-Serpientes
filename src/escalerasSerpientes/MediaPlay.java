@@ -1,32 +1,20 @@
 package escalerasSerpientes;
 
 import java.io.File;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
-import javax.print.attribute.standard.Media;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.DataLine.Info;
-import javax.sound.sampled.SourceDataLine;
 // Clase en construccion para el reproductor de audio mp3
 public class MediaPlay {
-	private AudioInputStream audio;
-	//private AudioFormat formato;
+	private Media audio;
+	private MediaPlayer musica;
 
-	public void MediaPlay(String ruta) {
-		File archivo = new File(ruta);
-		audio = getAudioInputStream(archivo);
-	//final	AudioFormat formato =  getOutFormat(audio.getFormat());
-		//final Info info = new Info(SourceDataLine.class, formato);
+	// private AudioFormat formato;
 
+	public MediaPlay(String ruta) {
+		audio = new Media(new File(ruta).toURI().toString());
+		musica = new MediaPlayer(audio);
+		musica.play();
 	}
 
-	private AudioFormat getOutFormat(AudioFormat format) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private AudioInputStream getAudioInputStream(File archivo) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

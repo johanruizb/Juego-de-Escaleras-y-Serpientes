@@ -10,9 +10,13 @@ import javax.swing.JFrame;
 public class Tirar extends JFrame {
 	private Sonido sonido;
 
+
 	//private MediaPlay play;
 
 	//private MediaPlay play;
+
+
+	private MediaPlay play;
 
 
 	public Tirar() {
@@ -29,7 +33,11 @@ public class Tirar extends JFrame {
 		// TODO Auto-generated method stub
 		sonido = new Sonido();
 
+
 		//play = new MediaPlay();
+
+//		play = new MediaPlay();
+
 
 //		play = new MediaPlay();
 
@@ -41,9 +49,12 @@ public class Tirar extends JFrame {
 				// TODO Auto-generated method stub
 //				sonido.reproductorMusic("audio1");
 
+
 			//play.MediaPlay("audio2.mp3");
 				
 		//play = new MediaPlay("audio2.mp3");
+
+		play = new MediaPlay("audio2.mp3");
 
 
 			}

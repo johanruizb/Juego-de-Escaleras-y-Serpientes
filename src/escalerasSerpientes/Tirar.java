@@ -8,7 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 public class Tirar extends JFrame {
-	private Sonido sonido;
+
 
 
 	//private MediaPlay play;
@@ -31,11 +31,11 @@ public class Tirar extends JFrame {
 
 	private void initGUI() {
 		// TODO Auto-generated method stub
-		sonido = new Sonido();
+		
 
 
-		//play = new MediaPlay();
-
+		play = new MediaPlay("audio2");
+         
 //		play = new MediaPlay();
 
 
@@ -48,13 +48,13 @@ public class Tirar extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 //				sonido.reproductorMusic("audio1");
-
+                 play.reproducir();
 
 			//play.MediaPlay("audio2.mp3");
 				
 		//play = new MediaPlay("audio2.mp3");
 
-		play = new MediaPlay("audio2.mp3");
+		//play = new MediaPlay("audio2.mp3");
 
 
 			}

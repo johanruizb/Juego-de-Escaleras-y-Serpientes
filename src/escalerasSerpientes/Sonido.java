@@ -13,7 +13,7 @@ import javax.sound.sampled.TargetDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 // Clase qiue reproduce un archivo wav esta funcionando
-public class Sonido {
+/*public class Sonido {
 	private AudioInputStream entrada;
 
 	public void reproductorMusic(String name) {
@@ -40,4 +40,4 @@ public class Sonido {
 	{ // TODO Auto-generated
 	 e.printStackTrace(); }
 
-}
+}*/

@@ -11,8 +11,8 @@ public class Principal {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 			@SuppressWarnings("unused")
-				GUIEscaleraSerpientes gui = new GUIEscaleraSerpientes();
-			//Tirar t = new Tirar();
+			//	GUIEscaleraSerpientes gui = new GUIEscaleraSerpientes();
+			Tirar t = new Tirar();
 			
 			}
 		});

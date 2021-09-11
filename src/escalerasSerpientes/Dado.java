@@ -10,9 +10,4 @@ public class Dado {
 		numero = ran.nextInt(6)+1;
 		return numero;
 	}
-
-	public int getNumero() {
-		return numero;
-	}
-
 }

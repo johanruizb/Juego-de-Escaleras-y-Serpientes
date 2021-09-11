@@ -18,7 +18,7 @@ public class EscalerasSerpientes {
 		// TODO Auto-generated method stub
 		Random temp = new Random();
 
-		int randomN1 = temp.nextInt(5) + 25;
+		int randomN1 = temp.nextInt(5) + 10;
 		int aumenta = 18;
 
 		int zona = 0;
@@ -26,21 +26,17 @@ public class EscalerasSerpientes {
 		while (!(escaleras.size() == 5)) {
 
 			if (!isContained(randomN1, serpientes, escaleras) && !isContained(randomN1 + 15, serpientes, escaleras)) {
+
 				ArrayList<Integer> temporal = new ArrayList<Integer>(2);
 
-				System.out.println(randomN1 + "==" + (randomN1 + aumenta));
-				
 				temporal.add(randomN1);
 				temporal.add(randomN1 + aumenta);
 
 				zona += 11;
 
-//			aumenta = temp.nextInt(5) + 8;
-
 				escaleras.add(temporal);
-//				temporal.clear();
 			}
-			randomN1 = temp.nextInt(3) + 25 + zona;
+			randomN1 = temp.nextInt(5) + 18 + zona;
 		}
 	}
 
@@ -56,9 +52,8 @@ public class EscalerasSerpientes {
 		while (!(serpientes.size() == 5)) {
 
 			if (!isContained(randomN1, serpientes, escaleras) && !isContained(randomN1 - 18, serpientes, escaleras)) {
-				ArrayList<Integer> temporal = new ArrayList<Integer>(2);
 
-//				System.out.println(randomN1 + "++" + (randomN1 - reduce));
+				ArrayList<Integer> temporal = new ArrayList<Integer>(2);
 
 				temporal.add(randomN1);
 				temporal.add(randomN1 - reduce);

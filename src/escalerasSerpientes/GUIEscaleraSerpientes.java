@@ -5,8 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
-import java.util.Collection;
-
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,10 +13,7 @@ import javax.swing.JPanel;
 
 public class GUIEscaleraSerpientes extends JFrame {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -142202431892957518L;
 	private Dibujo dibujo;
 	private JPanel tableroJuego;
 	private ArrayList<JLabel> tablero = new ArrayList<JLabel>(100);

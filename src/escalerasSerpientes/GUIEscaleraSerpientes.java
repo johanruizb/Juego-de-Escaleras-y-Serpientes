@@ -4,35 +4,46 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 public class GUIEscaleraSerpientes extends JFrame {
 
 	private static final long serialVersionUID = -142202431892957518L;
-	private Dibujo dibujo;
+	private DibujoEscalerasSerpientes dibujo;
+	private DibujoJugador jugadores;
 	private JPanel tableroJuego;
 	private ArrayList<JLabel> tablero = new ArrayList<JLabel>(100);
-
+	private Escucha escucha;
+	private JButton mover;
 	private TableroJuego t1;
+	//
+	private JFrame dis = this;
 
 	public GUIEscaleraSerpientes() {
+
+		// TODO Auto-generated method stub
 		initGUI();
 		this.setTitle("Esacaleras y Serpientes");
 		this.setVisible(true);
-		this.setSize(450, 450);
+		this.setSize(650, 450);
 		this.setLocationRelativeTo(null);
-		this.setResizable(false);
+//				this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 	}
 
 	private void initGUI() {
+
+		escucha = new Escucha();
 
 		JLayeredPane capas = new JLayeredPane();
 		capas.setSize(500, 500);
@@ -40,7 +51,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 		// TABLERO GUI
 
 		tableroJuego = new JPanel(new GridLayout(10, 10));
-		tableroJuego.setSize(500, 500);
+//		tableroJuego.setSize(500, 500);
 		tableroJuego.setOpaque(false);
 		tableroJuego.setBounds(18, 6, 400, 400);
 
@@ -75,14 +86,27 @@ public class GUIEscaleraSerpientes extends JFrame {
 		auxPoint2.addAll(posicionEscaleras());
 		// ---
 		// DIBUJO
-		dibujo = new Dibujo(auxPoint, auxPoint2);
+		dibujo = new DibujoEscalerasSerpientes(auxPoint, auxPoint2);
 		dibujo.setSize(500, 500);
 
-		// AÑADIR AL PANEL
-		capas.add(tableroJuego, new Integer(2));
-		capas.add(dibujo, new Integer(1));
+		// JUGADORES
+		jugadores = new DibujoJugador();
+		jugadores.setBounds(18, 6, 400, 400);
 
+		// AÑADIR LAS CAPAS
+		capas.add(tableroJuego, new Integer(2));
+//		capas.add(dibujo, new Integer(1));
+		capas.add(jugadores, new Integer(3));
+
+		// BOTON
+
+		mover = new JButton("Mover");
+		mover.addActionListener(escucha);
+
+		// AÑADIR COMPONENTES A LA VENTANA
 		add(capas, BorderLayout.CENTER);
+		add(mover, BorderLayout.EAST);
+
 	}
 
 	private ArrayList<ArrayList<Integer>> posicionEscaleras() {
@@ -161,5 +185,18 @@ public class GUIEscaleraSerpientes extends JFrame {
 		}
 
 		return auxPoint;
+	}
+
+	private class Escucha implements ActionListener {
+
+		@Override
+		public synchronized void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+
+			mover.setEnabled(false);
+			jugadores.setPosition(8, 8, 1);
+//			mover.setEnabled(true);
+
+		}
 	}
 }

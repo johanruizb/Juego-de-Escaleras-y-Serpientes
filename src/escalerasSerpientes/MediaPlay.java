@@ -10,13 +10,13 @@ public class MediaPlay {
 	private MediaPlayer musica;
 
 	public MediaPlay(String nombre) {
-		String ruta = "src/sonidos/"+nombre+".mp3";
+		String ruta = "src/sonidos/" + nombre + ".mp3";
 		audio = new Media(new File(ruta).toURI().toString());
 		musica = new MediaPlayer(audio);
-		
+
 	}
+
 	public void reproducir() {
 		musica.play();
 	}
 }
-

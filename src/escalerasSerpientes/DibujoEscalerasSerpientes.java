@@ -2,20 +2,17 @@ package escalerasSerpientes;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Point2D;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
 import javax.swing.JPanel;
 
-public class Dibujo extends JPanel {
+public class DibujoEscalerasSerpientes extends JPanel {
 
 	/**
 	 * 
@@ -27,7 +24,7 @@ public class Dibujo extends JPanel {
 	private ArrayList<Color> colores = new ArrayList<>(
 			Arrays.asList(Color.BLACK, Color.BLUE, Color.CYAN, Color.GRAY, Color.GREEN));
 
-	public Dibujo(ArrayList<ArrayList<Integer>> auxPoint, ArrayList<ArrayList<Integer>> auxPoint2) {
+	public DibujoEscalerasSerpientes(ArrayList<ArrayList<Integer>> auxPoint, ArrayList<ArrayList<Integer>> auxPoint2) {
 		serpientes.addAll(auxPoint);
 		escaleras.addAll(auxPoint2);
 		this.setOpaque(false);

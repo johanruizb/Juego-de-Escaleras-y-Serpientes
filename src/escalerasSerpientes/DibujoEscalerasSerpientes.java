@@ -23,11 +23,15 @@ public class DibujoEscalerasSerpientes extends JPanel {
 
 	private ArrayList<Color> colores = new ArrayList<>(
 			Arrays.asList(Color.BLACK, Color.BLUE, Color.CYAN, Color.GRAY, Color.GREEN));
+	private ArrayList<Color> coloresRan = new ArrayList<>();
 
 	public DibujoEscalerasSerpientes(ArrayList<ArrayList<Integer>> auxPoint, ArrayList<ArrayList<Integer>> auxPoint2) {
 		serpientes.addAll(auxPoint);
 		escaleras.addAll(auxPoint2);
 		this.setOpaque(false);
+
+		this.setBounds(18, 6, 400, 400);
+
 	}
 
 	public void paintComponent(Graphics g) {
@@ -44,8 +48,8 @@ public class DibujoEscalerasSerpientes extends JPanel {
 			// BASES
 
 			// POSICIONES INCIALES DE LAS BASES
-			int x1Inicio = escaleras.get(i).get(2), y1Inicio = escaleras.get(i).get(3), x1Fin = escaleras.get(i).get(0),
-					y1Fin = escaleras.get(i).get(1);
+			int x1Inicio = escaleras.get(i).get(2) + 6, y1Inicio = escaleras.get(i).get(3) + 20,
+					x1Fin = escaleras.get(i).get(0), y1Fin = escaleras.get(i).get(1) + 8;
 			int x2Inicio = x1Inicio + 20, y2Inicio = y1Inicio, x2Fin = x1Fin + 20, y2Fin = y1Fin;
 			int y1Copy = y1Inicio, y2Copy = y2Inicio;
 
@@ -54,7 +58,7 @@ public class DibujoEscalerasSerpientes extends JPanel {
 
 			// ESPACIO ENTRE ESCALONES
 			int espacioEscalones;
-			espacioEscalones = (int) Math.ceil(d1 / 15) - 1;
+			espacioEscalones = (int) Math.ceil(d1 / 11) - 2;
 
 			// DIBUJAR BASES
 			g.setColor(Color.BLACK);
@@ -73,14 +77,14 @@ public class DibujoEscalerasSerpientes extends JPanel {
 			// PINTAR ESCALONES
 			for (int j = 0; j < (espacioEscalones); j++) {
 
-				y1Copy -= 10;
-				y2Copy -= 10;
+				y1Copy -= 8;
+				y2Copy -= 8;
 
 				double isX1 = (((y1Copy) - n1) / m1);
 				double isX2 = (((y2Copy) - n2) / m2);
 
-				y1Inicio += 10;
-				y2Inicio += 10;
+				y1Inicio += 8;
+				y2Inicio += 8;
 
 				x1Inicio = (int) Math.round(isX1);
 				x2Inicio = (int) Math.floor(isX2);
@@ -98,9 +102,14 @@ public class DibujoEscalerasSerpientes extends JPanel {
 	private void dibujarSerpientes(Graphics g) {
 		// TODO Auto-generated method stub
 		Random random1 = new Random();
-		for (int i = serpientes.size() - 1; serpientes.size() > 0 && (i >= 0); i--) {
 
-			int color1 = random1.nextInt(colores.size());
+		if (coloresRan.isEmpty()) {
+			coloresRan.addAll(Arrays.asList(colores.get(random1.nextInt(colores.size())),
+					colores.get(random1.nextInt(colores.size())), colores.get(random1.nextInt(colores.size())),
+					colores.get(random1.nextInt(colores.size())), colores.get(random1.nextInt(colores.size()))));
+		}
+
+		for (int i = serpientes.size() - 1; serpientes.size() > 0 && (i >= 0); i--) {
 
 			int xInicio = serpientes.get(i).get(0), yInicio = serpientes.get(i).get(1);
 			int xFin = serpientes.get(i).get(2), yFin = serpientes.get(i).get(3);
@@ -108,7 +117,7 @@ public class DibujoEscalerasSerpientes extends JPanel {
 			// SERPIENTE
 
 			// CUERPO
-			g.setColor(colores.get(color1).darker());
+			g.setColor(colores.get(i).darker());
 			CubicCurve2D.Double cubic = new CubicCurve2D.Double();
 			Point2D.Double start, end, uno, dos;
 			// INICIO - CUERPO
@@ -146,7 +155,7 @@ public class DibujoEscalerasSerpientes extends JPanel {
 			}
 
 			// CABEZA
-			g.setColor(colores.get(color1).darker());
+			g.setColor(colores.get(i).darker());
 			g.fillOval(xInicio - 10, yInicio - 6, 30, 15);
 
 			// COLA

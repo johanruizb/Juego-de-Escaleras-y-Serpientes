@@ -79,23 +79,23 @@ public class GUIEscaleraSerpientes extends JFrame {
 		}
 
 		// EXTRAER POSICIONES EN PIXELES DE ESCALERAS Y SERPIENTES
-		ArrayList<ArrayList<Integer>> auxPoint = new ArrayList<>();
-		auxPoint.addAll(posicionSerpientes());
+		ArrayList<ArrayList<Integer>> pSerpientes = new ArrayList<>();
+		pSerpientes.addAll(posicionSerpientes());
 
-		ArrayList<ArrayList<Integer>> auxPoint2 = new ArrayList<>();
-		auxPoint2.addAll(posicionEscaleras());
+		ArrayList<ArrayList<Integer>> pEscaleras = new ArrayList<>();
+		pEscaleras.addAll(posicionEscaleras());
 		// ---
 		// DIBUJO
-		dibujo = new DibujoEscalerasSerpientes(auxPoint, auxPoint2);
+		dibujo = new DibujoEscalerasSerpientes(pSerpientes, pEscaleras);
 		dibujo.setSize(500, 500);
 
 		// JUGADORES
-		jugadores = new DibujoJugador();
+		jugadores = new DibujoJugador(pSerpientes, pEscaleras);
 		jugadores.setBounds(18, 6, 400, 400);
 
 		// AÑADIR LAS CAPAS
 		capas.add(tableroJuego, new Integer(2));
-//		capas.add(dibujo, new Integer(1));
+		capas.add(dibujo, new Integer(1));
 		capas.add(jugadores, new Integer(3));
 
 		// BOTON
@@ -139,8 +139,8 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 				columna = t2.get(fila).indexOf(escaleras.get(i).get(j));
 
-				auxPoint2.get(i).add((columna * 40) + 30);
-				auxPoint2.get(i).add((fila * 40) + 25);
+				auxPoint2.get(i).add((columna * 40) + 8);
+				auxPoint2.get(i).add((fila * 40) + 8);
 			}
 
 		}
@@ -178,8 +178,8 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 				columna = t2.get(fila).indexOf(serpientes.get(i).get(j));
 
-				auxPoint.get(i).add((columna * 40) + 30);
-				auxPoint.get(i).add((fila * 40) + 30);
+				auxPoint.get(i).add((columna * 40) + 8);
+				auxPoint.get(i).add((fila * 40) + 8);
 			}
 
 		}
@@ -194,7 +194,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 			// TODO Auto-generated method stub
 
 			mover.setEnabled(false);
-			jugadores.setPosition(8, 8, 1);
+			jugadores.setPosition(21, 1);
 //			mover.setEnabled(true);
 
 		}

@@ -16,7 +16,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -37,9 +36,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 	private MediaPlay play;
 	private String ruta;
 	private static int contador;
-	//
-	private JFrame dis = this;
-
+	
 	public GUIEscaleraSerpientes() {
 
 		// TODO Auto-generated method stub
@@ -63,7 +60,6 @@ public class GUIEscaleraSerpientes extends JFrame {
 		// TABLERO GUI
 		componentes = new JPanel(new BorderLayout());
 		tableroJuego = new JPanel(new GridLayout(10, 10));
-//		tableroJuego.setSize(500, 500);
 		tableroJuego.setOpaque(false);
 		tableroJuego.setBounds(18, 6, 400, 400);
 
@@ -129,6 +125,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 			}
 
 		});
+		
 		// BORON DE REPRODUCCION
 		reproducir = new JButton(new ImageIcon("src/imagenes/on.png"));
 		reproducir.addActionListener(escuchaplay);
@@ -152,11 +149,9 @@ public class GUIEscaleraSerpientes extends JFrame {
 	}
 
 	private static Scene initScene() {
-
 		Group root = new Group();
 		Scene scene = new Scene(root, javafx.scene.paint.Color.ALICEBLUE);
 		return (scene);
-
 	}
 
 	public String aleatorio() {
@@ -267,7 +262,6 @@ public class GUIEscaleraSerpientes extends JFrame {
 				play.reproducir();
 			}
 			if (contador == 2) {
-
 				reproducir.setIcon(new ImageIcon("src/imagenes/off.png"));
 				play.pausar();
 			}

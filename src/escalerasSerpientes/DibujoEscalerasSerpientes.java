@@ -22,7 +22,7 @@ public class DibujoEscalerasSerpientes extends JPanel {
 	private ArrayList<ArrayList<Integer>> escaleras = new ArrayList<ArrayList<Integer>>();
 
 	private ArrayList<Color> colores = new ArrayList<>(
-			Arrays.asList(Color.BLACK, Color.BLUE, Color.CYAN, Color.GRAY, Color.GREEN));
+			Arrays.asList(Color.ORANGE, Color.BLUE, Color.CYAN, Color.MAGENTA, Color.GREEN));
 	private ArrayList<Color> coloresRan = new ArrayList<>();
 
 	public DibujoEscalerasSerpientes(ArrayList<ArrayList<Integer>> auxPoint, ArrayList<ArrayList<Integer>> auxPoint2) {
@@ -111,8 +111,9 @@ public class DibujoEscalerasSerpientes extends JPanel {
 
 		for (int i = serpientes.size() - 1; serpientes.size() > 0 && (i >= 0); i--) {
 
-			int xInicio = serpientes.get(i).get(0), yInicio = serpientes.get(i).get(1);
-			int xFin = serpientes.get(i).get(2), yFin = serpientes.get(i).get(3);
+			// COORDENADAS
+			int xInicio = serpientes.get(i).get(0), yInicio = serpientes.get(i).get(1) + 20;
+			int xFin = serpientes.get(i).get(2) + 8, yFin = serpientes.get(i).get(3) + 20;
 
 			// SERPIENTE
 
@@ -120,16 +121,25 @@ public class DibujoEscalerasSerpientes extends JPanel {
 			g.setColor(colores.get(i).darker());
 			CubicCurve2D.Double cubic = new CubicCurve2D.Double();
 			Point2D.Double start, end, uno, dos;
+
 			// INICIO - CUERPO
 			start = new Point2D.Double();
-			start.x = xInicio;
-			start.y = yInicio;
-
+			if (xInicio > xFin) {
+				start.x = xInicio;
+				start.y = yInicio;
+			} else {
+				start.x = xInicio + 10;
+				start.y = yInicio;
+			}
 			// CURVA 1
 			uno = new Point2D.Double();
-			uno.x = xFin;
-			uno.y = yInicio;
-
+			if (xInicio > xFin) {
+				uno.x = xFin;
+				uno.y = yInicio;
+			} else {
+				uno.x = xFin + 10;
+				uno.y = yInicio + 10;
+			}
 			// CURVA 2
 			dos = new Point2D.Double();
 			dos.x = xInicio;
@@ -137,9 +147,13 @@ public class DibujoEscalerasSerpientes extends JPanel {
 
 			// FIN - CUERPO
 			end = new Point2D.Double();
-			end.x = xFin;
-			end.y = yFin;
-
+			if (xInicio > xFin) {
+				end.x = xFin;
+				end.y = yFin;
+			} else {
+				end.x = xFin;
+				end.y = yFin;
+			}
 			cubic.setCurve(start, uno, dos, end);
 
 			// PINTANDO CUERPO
@@ -149,18 +163,25 @@ public class DibujoEscalerasSerpientes extends JPanel {
 			// BOCA
 			g.setColor(Color.RED);
 			if (xInicio > xFin) {
-				g.fillRect(xInicio + 20, yInicio, 15, 2);
+				g.fillRect(xInicio + 20, yInicio, 5, 2);
 			} else {
-				g.fillRect(xInicio - 24, yInicio, 15, 2);
+				g.fillRect(xInicio - 14, yInicio, 5, 2);
 			}
 
 			// CABEZA
 			g.setColor(colores.get(i).darker());
-			g.fillOval(xInicio - 10, yInicio - 6, 30, 15);
-
+			if (xInicio > xFin) {
+				g.fillOval(xInicio - 10, yInicio - 6, 30, 15);
+			} else {
+				g.fillOval(xInicio - 5, yInicio - 6, 30, 15);
+			}
 			// COLA
-			g.fillOval(xFin - 10, yFin - 6, 30, 10);
 
+			if (xInicio > xFin) {
+				g.fillOval(xFin - 15, yFin - 6, 30, 10);
+			} else {
+				g.fillOval(xFin - 10, yFin - 6, 30, 10);
+			}
 			// OJOS
 			g.setColor(Color.WHITE);
 			if (xInicio > xFin) {

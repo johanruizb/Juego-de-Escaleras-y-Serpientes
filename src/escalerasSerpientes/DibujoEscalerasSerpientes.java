@@ -115,6 +115,8 @@ public class DibujoEscalerasSerpientes extends JPanel {
 			int xInicio = serpientes.get(i).get(0), yInicio = serpientes.get(i).get(1) + 20;
 			int xFin = serpientes.get(i).get(2) + 8, yFin = serpientes.get(i).get(3) + 20;
 
+			boolean derecha = (xInicio > xFin);
+
 			// SERPIENTE
 
 			// CUERPO
@@ -124,7 +126,7 @@ public class DibujoEscalerasSerpientes extends JPanel {
 
 			// INICIO - CUERPO
 			start = new Point2D.Double();
-			if (xInicio > xFin) {
+			if (derecha) {
 				start.x = xInicio;
 				start.y = yInicio;
 			} else {
@@ -133,7 +135,7 @@ public class DibujoEscalerasSerpientes extends JPanel {
 			}
 			// CURVA 1
 			uno = new Point2D.Double();
-			if (xInicio > xFin) {
+			if (derecha) {
 				uno.x = xFin;
 				uno.y = yInicio;
 			} else {
@@ -147,7 +149,7 @@ public class DibujoEscalerasSerpientes extends JPanel {
 
 			// FIN - CUERPO
 			end = new Point2D.Double();
-			if (xInicio > xFin) {
+			if (derecha) {
 				end.x = xFin;
 				end.y = yFin;
 			} else {
@@ -162,7 +164,7 @@ public class DibujoEscalerasSerpientes extends JPanel {
 
 			// BOCA
 			g.setColor(Color.RED);
-			if (xInicio > xFin) {
+			if (derecha) {
 				g.fillRect(xInicio + 20, yInicio, 5, 2);
 			} else {
 				g.fillRect(xInicio - 14, yInicio, 5, 2);
@@ -170,21 +172,21 @@ public class DibujoEscalerasSerpientes extends JPanel {
 
 			// CABEZA
 			g.setColor(colores.get(i).darker());
-			if (xInicio > xFin) {
+			if (derecha) {
 				g.fillOval(xInicio - 10, yInicio - 6, 30, 15);
 			} else {
 				g.fillOval(xInicio - 5, yInicio - 6, 30, 15);
 			}
 			// COLA
 
-			if (xInicio > xFin) {
+			if (derecha) {
 				g.fillOval(xFin - 15, yFin - 6, 30, 10);
 			} else {
 				g.fillOval(xFin - 10, yFin - 6, 30, 10);
 			}
 			// OJOS
 			g.setColor(Color.WHITE);
-			if (xInicio > xFin) {
+			if (derecha) {
 				g.fillOval(xInicio + 4, yInicio - 5, 5, 5);
 				g.fillOval(xInicio + 4, yInicio + 2, 5, 5);
 			} else {

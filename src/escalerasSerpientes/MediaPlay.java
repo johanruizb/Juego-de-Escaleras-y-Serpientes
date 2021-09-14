@@ -8,9 +8,11 @@ import javafx.scene.media.MediaPlayer;
 public class MediaPlay {
 	private Media audio;
 	private MediaPlayer musica;
+	private String son;
 
 	public MediaPlay(String nombre) {
-		String ruta = "src/sonidos/" + nombre + ".mp3";
+		this.son = nombre;
+		String ruta = "src/sonidos/" + son + ".mp3";
 		audio = new Media(new File(ruta).toURI().toString());
 		musica = new MediaPlayer(audio);
 
@@ -19,4 +21,10 @@ public class MediaPlay {
 	public void reproducir() {
 		musica.play();
 	}
+	public void stop() {
+		musica.stop();
+	}
+	 public void pausar() {
+		 musica.pause();
+	 }
 }

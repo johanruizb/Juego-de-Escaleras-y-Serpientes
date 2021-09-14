@@ -3,6 +3,7 @@ package escalerasSerpientes;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,6 +19,7 @@ public class Tirar extends JFrame {
 	// private MediaPlay play;
 
 	private MediaPlay play;
+	private String ruta;
 
 	public Tirar() {
 		initGUI();
@@ -33,7 +35,7 @@ public class Tirar extends JFrame {
 		// TODO Auto-generated method stub
 
 		JFXPanel panel = new JFXPanel();
-		play = new MediaPlay("audio2");
+		play = new MediaPlay(aleatorio());
 
 		Platform.runLater(new Runnable() {
 
@@ -66,6 +68,11 @@ public class Tirar extends JFrame {
 		Scene scene = new Scene(root, javafx.scene.paint.Color.ALICEBLUE);
 		return (scene);
 
+	}
+	public String aleatorio() {
+		Random ran = new Random();
+		ruta = String.valueOf(ran.nextInt(2)+1);
+		return ruta;
 	}
 
 }

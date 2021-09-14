@@ -7,8 +7,10 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,16 +18,25 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+
 public class GUIEscaleraSerpientes extends JFrame {
 
 	private static final long serialVersionUID = -142202431892957518L;
 	private DibujoEscalerasSerpientes dibujo;
 	private DibujoJugador jugadores;
-	private JPanel tableroJuego;
+	private JPanel tableroJuego, componentes;
 	private ArrayList<JLabel> tablero = new ArrayList<JLabel>(100);
 	private Escucha escucha;
-	private JButton mover;
+	private EscuchaPlay escuchaplay;
+	private JButton mover, reproducir;
 	private TableroJuego t1;
+	private MediaPlay play;
+	private String ruta;
+	private static int contador;
 	//
 	private JFrame dis = this;
 
@@ -44,12 +55,13 @@ public class GUIEscaleraSerpientes extends JFrame {
 	private void initGUI() {
 
 		escucha = new Escucha();
+		escuchaplay = new EscuchaPlay();
 
 		JLayeredPane capas = new JLayeredPane();
 		capas.setSize(500, 500);
 
 		// TABLERO GUI
-
+		componentes = new JPanel(new BorderLayout());
 		tableroJuego = new JPanel(new GridLayout(10, 10));
 //		tableroJuego.setSize(500, 500);
 		tableroJuego.setOpaque(false);
@@ -103,10 +115,54 @@ public class GUIEscaleraSerpientes extends JFrame {
 		mover = new JButton("Mover");
 		mover.addActionListener(escucha);
 
-		// AÑADIR COMPONENTES A LA VENTANA
-		add(capas, BorderLayout.CENTER);
-		add(mover, BorderLayout.EAST);
+		// REPRODUCTOR
+		JFXPanel panelsonido = new JFXPanel();
+		play = new MediaPlay(aleatorio());
 
+		Platform.runLater(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				Scene scene = initScene();
+				panelsonido.setScene(scene);
+			}
+
+		});
+		// BORON DE REPRODUCCION
+		reproducir = new JButton(new ImageIcon("src/imagenes/on.png"));
+		reproducir.addActionListener(escuchaplay);
+		reproducir.setBorder(null);
+		reproducir.setContentAreaFilled(false);
+
+		// add(b, BorderLayout.CENTER);
+		// add(panel, BorderLayout.NORTH);
+
+		// AÑADIENDO COMPONENTES AL PANEL DE LA VISTA
+
+		componentes.add(panelsonido, BorderLayout.NORTH);
+		componentes.add(reproducir, BorderLayout.CENTER);
+		componentes.add(mover, BorderLayout.SOUTH);
+
+		// AÑADIR COMPONENTES A LA VENTANA
+
+		add(capas, BorderLayout.CENTER);
+		// add(mover, BorderLayout.EAST);
+		add(componentes, BorderLayout.EAST);
+	}
+
+	private static Scene initScene() {
+
+		Group root = new Group();
+		Scene scene = new Scene(root, javafx.scene.paint.Color.ALICEBLUE);
+		return (scene);
+
+	}
+
+	public String aleatorio() {
+		Random ran = new Random();
+		ruta = String.valueOf(ran.nextInt(7) + 1);
+		return ruta;
 	}
 
 	private ArrayList<ArrayList<Integer>> posicionEscaleras() {
@@ -198,5 +254,29 @@ public class GUIEscaleraSerpientes extends JFrame {
 //			mover.setEnabled(true);
 
 		}
+	}
+
+//CLASE PARA EL MANEJO DE LA REPRODUCCION DE LA MUSICA
+	private class EscuchaPlay implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			if (e.getSource() == reproducir) {
+				contador++;
+				play.reproducir();
+			}
+			if (contador == 2) {
+
+				reproducir.setIcon(new ImageIcon("src/imagenes/off.png"));
+				play.pausar();
+			}
+			if (contador == 3) {
+				contador = 1;
+				reproducir.setIcon(new ImageIcon("src/imagenes/on.png"));
+				play.reproducir();
+			}
+		}
+
 	}
 }

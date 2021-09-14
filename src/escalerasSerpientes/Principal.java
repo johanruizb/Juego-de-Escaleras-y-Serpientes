@@ -12,7 +12,7 @@ public class Principal {
 			public void run() {
 				@SuppressWarnings("unused")
 				GUIEscaleraSerpientes gui = new GUIEscaleraSerpientes();
-//			Tirar t = new Tirar();
+//		Tirar t = new Tirar();
 
 			}
 		});

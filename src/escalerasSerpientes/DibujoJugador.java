@@ -110,8 +110,6 @@ public class DibujoJugador extends JPanel implements Runnable {
 
 	private void animarCasillas(int n) {
 
-		moviendose = true;
-
 		boolean tope = false;
 //		boolean sumar = sentido(p[targetJugador][0]);
 

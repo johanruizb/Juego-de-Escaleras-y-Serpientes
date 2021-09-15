@@ -169,8 +169,6 @@ public class DibujoJugador extends JPanel implements Runnable {
 			test1.notifyAll();
 		}
 
-		moviendose = false;
-
 		prueba.interrupt();
 	}
 

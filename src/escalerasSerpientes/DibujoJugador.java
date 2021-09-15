@@ -11,20 +11,23 @@ import javax.swing.JPanel;
 public class DibujoJugador extends JPanel implements Runnable {
 
 	private static final long serialVersionUID = -1333670092518533289L;
-	private ImageIcon j1 = new ImageIcon("src/imagenes/j1.png");
-//			, j2, j3;
+	public static int ESPERA = 8;
+
+	private ImageIcon[] j = new ImageIcon[] { new ImageIcon("src/imagenes/j1.png"),
+			new ImageIcon("src/imagenes/j1.png"), new ImageIcon("src/imagenes/j1.png") };
 	private int[][] p = new int[][] { { 8, 368 }, { 8, 368 }, { 8, 368 } };
 
 	private int[] target = new int[] { -1, -1 };
 	private int targetJugador = 1, movimientos = 0;
-
-	private Thread prueba = new Thread(this);
 
 	private ArrayList<Integer> limites = new ArrayList<>(Arrays.asList(368, 288, 208, 128, 48));
 	private ArrayList<Integer> limites2 = new ArrayList<>(Arrays.asList(368, 328, 288, 248, 208, 168, 128, 88, 48, 8));
 
 	private ArrayList<ArrayList<Integer>> serpientes = new ArrayList<ArrayList<Integer>>();
 	private ArrayList<ArrayList<Integer>> escaleras = new ArrayList<ArrayList<Integer>>();
+
+	private DibujoJugador dis = this;
+	private Thread prueba = new Thread(this);
 
 	public DibujoJugador(ArrayList<ArrayList<Integer>> s, ArrayList<ArrayList<Integer>> e) {
 		// TODO Auto-generated constructor stub
@@ -48,17 +51,53 @@ public class DibujoJugador extends JPanel implements Runnable {
 			prueba.start();
 			System.out.println(prueba.getState());
 		} else {
-			prueba.interrupt();
-			System.out.println(prueba.getState());
 
+			prueba.interrupt();
+
+			while (prueba.getState() != Thread.State.TERMINATED) {
+				System.out.println("xd");
+			}
+
+			prueba = new Thread(dis);
+			prueba.start();
+
+			System.out.println(prueba.getState());
 		}
 	}
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+//		g.drawImage(j[0].getImage(), p[0][0], p[0][1], null);
+//		g.drawImage(j[0].getImage(), p[1][0], p[1][1], null);
 
-		for (int i = 0; i < 1; i++) {
-			g.drawImage(j1.getImage(), p[i][0], p[i][1], null);
+		if (p[0][0] == p[1][0] && p[1][0] == p[2][0]) {
+			
+			g.drawImage(j[0].getImage(), p[0][0] + 10, p[0][1], null);
+			g.drawImage(j[1].getImage(), p[1][0] - 10, p[1][1] - 10, null);
+			g.drawImage(j[2].getImage(), p[2][0] - 10, p[2][1] + 10, null);
+			
+		} else if (p[0][0] == p[1][0]) {
+			
+			g.drawImage(j[0].getImage(), p[0][0] + 10, p[0][1], null);
+			g.drawImage(j[1].getImage(), p[1][0] - 10, p[1][1], null);
+			g.drawImage(j[2].getImage(), p[2][0], p[2][1], null);
+
+		} else if (p[0][0] == p[2][0]) {
+			g.drawImage(j[1].getImage(), p[1][0], p[1][1], null);
+
+			g.drawImage(j[0].getImage(), p[0][0] + 10, p[0][1], null);
+			g.drawImage(j[2].getImage(), p[2][0] - 10, p[2][1], null);
+			
+		} else if (p[1][0] == p[2][0]) {
+			g.drawImage(j[0].getImage(), p[0][0], p[0][1], null);
+
+			g.drawImage(j[1].getImage(), p[1][0] + 10, p[1][1], null);
+			g.drawImage(j[2].getImage(), p[2][0] - 10, p[2][1], null);
+			
+		} else {
+			g.drawImage(j[0].getImage(), p[0][0], p[0][1], null);
+			g.drawImage(j[1].getImage(), p[1][0], p[1][1], null);
+			g.drawImage(j[2].getImage(), p[2][0], p[2][1], null);
 		}
 	}
 
@@ -115,15 +154,13 @@ public class DibujoJugador extends JPanel implements Runnable {
 			repaint();
 
 			try {
-				Thread.sleep(8);
+				Thread.sleep(ESPERA);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 		}
-
-//		notifyAll();
 	}
 
 	private synchronized void animarObjetos() {
@@ -153,7 +190,7 @@ public class DibujoJugador extends JPanel implements Runnable {
 			repaint();
 
 			try {
-				Thread.sleep(8);
+				Thread.sleep(ESPERA);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -109,6 +109,8 @@ public class DibujoEscalerasSerpientes extends JPanel {
 					colores.get(random1.nextInt(colores.size())), colores.get(random1.nextInt(colores.size()))));
 		}
 
+//		System.out.println("Size " + serpientes.size());
+
 		for (int i = serpientes.size() - 1; serpientes.size() > 0 && (i >= 0); i--) {
 
 			// COORDENADAS

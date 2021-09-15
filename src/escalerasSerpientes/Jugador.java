@@ -20,4 +20,12 @@ public class Jugador {
 		if (posicion < 7 && posicion > 0)
 			this.posicion += posicion;
 	}
+
+	public void escalera() {
+		posicion += 18;
+	}
+
+	public void serpiente() {
+		posicion -= 18;
+	}
 }

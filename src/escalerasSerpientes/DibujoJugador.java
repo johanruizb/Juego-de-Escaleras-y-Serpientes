@@ -116,7 +116,7 @@ public class DibujoJugador extends JPanel implements Runnable {
 		int altura = p[targetJugador][1];
 		int mov = 0;
 
-		while (!(mov == n)) {
+		while (!(mov == n) && !(p[targetJugador][1] - 7 < 0)) {
 
 //			System.out.println("es: " + (p[targetJugador][0] > target[0] && p[targetJugador][0] != 26));
 

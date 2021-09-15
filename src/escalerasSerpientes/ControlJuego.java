@@ -73,8 +73,6 @@ public class ControlJuego {
 	private boolean[] pisando(Jugador j) {
 		// TODO Auto-generated method stub
 
-		int fila = -1;
-
 		boolean escalera = false;
 		boolean serpiente = false;
 
@@ -102,6 +100,20 @@ public class ControlJuego {
 	}
 
 	// ----------
+
+	public boolean isWin() {
+
+		if (j1.getPosicion() >= 100) {
+			return true;
+		} else if (j2.getPosicion() >= 100) {
+			return true;
+		} else if (j3.getPosicion() >= 100) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public ArrayList<ArrayList<Integer>> getTablero() {
 		return tablero.getTablero();
 	}

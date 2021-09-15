@@ -258,25 +258,28 @@ public class GUIEscaleraSerpientes extends JFrame {
 		@Override
 		public synchronized void run() {
 			// TODO Auto-generated method stub
-			mover.setEnabled(false);
+			while (!control.isWin()) {
+				mover.setEnabled(false);
 
-			int movimientos = control.lanzarDados(j);
-			panelJugadores.setPosition(movimientos, j, this);
-			j++;
+				int movimientos = control.lanzarDados(j);
+				panelJugadores.setPosition(movimientos, j, this);
+				j++;
 
-			if (j == 4) {
-				j = 1;
+				if (j == 4) {
+					j = 1;
+				}
+
+				try {
+					wait();
+					mover.setEnabled(true);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
 			}
-
-			try {
-				wait();
-				mover.setEnabled(true);
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
 			x.interrupt();
+
 		}
 
 	}

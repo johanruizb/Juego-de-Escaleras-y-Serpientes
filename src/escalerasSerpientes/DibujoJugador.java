@@ -20,7 +20,6 @@ public class DibujoJugador extends JPanel implements Runnable {
 
 	private int[] target = new int[] { -1, -1 };
 	private int targetJugador = 1, movimientos = 0;
-	private boolean moviendose = false;
 
 	// Tableros
 	private ArrayList<Integer> limites = new ArrayList<>(Arrays.asList(368, 288, 208, 128, 48));

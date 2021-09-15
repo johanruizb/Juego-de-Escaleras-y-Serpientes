@@ -13,21 +13,26 @@ public class DibujoJugador extends JPanel implements Runnable {
 	private static final long serialVersionUID = -1333670092518533289L;
 	public static int ESPERA = 8;
 
+	// Juego
 	private ImageIcon[] j = new ImageIcon[] { new ImageIcon("src/imagenes/j1.png"),
-			new ImageIcon("src/imagenes/j1.png"), new ImageIcon("src/imagenes/j1.png") };
+			new ImageIcon("src/imagenes/npc.png"), new ImageIcon("src/imagenes/npc.png") };
 	private int[][] p = new int[][] { { 8, 368 }, { 8, 368 }, { 8, 368 } };
 
 	private int[] target = new int[] { -1, -1 };
 	private int targetJugador = 1, movimientos = 0;
+	private boolean moviendose = false;
 
+	// Tableros
 	private ArrayList<Integer> limites = new ArrayList<>(Arrays.asList(368, 288, 208, 128, 48));
 	private ArrayList<Integer> limites2 = new ArrayList<>(Arrays.asList(368, 328, 288, 248, 208, 168, 128, 88, 48, 8));
 
 	private ArrayList<ArrayList<Integer>> serpientes = new ArrayList<ArrayList<Integer>>();
 	private ArrayList<ArrayList<Integer>> escaleras = new ArrayList<ArrayList<Integer>>();
 
+	// Hilos
 	private DibujoJugador dis = this;
-	private Thread prueba = new Thread(this);
+	private Thread prueba;
+	private Runnable test1;
 
 	public DibujoJugador(ArrayList<ArrayList<Integer>> s, ArrayList<ArrayList<Integer>> e) {
 		// TODO Auto-generated constructor stub
@@ -39,30 +44,15 @@ public class DibujoJugador extends JPanel implements Runnable {
 		this.setOpaque(false);
 	}
 
-	public synchronized void setPosition(int m, int jugador) {
+	public void setPosition(int m, int jugador, Runnable r) {
 
-		if (prueba.getState() == Thread.State.NEW) {
-			targetJugador = jugador - 1;
+		targetJugador = jugador - 1;
 
-			movimientos = m;
+		movimientos = m;
+		test1 = r;
 
-//			target[0] = x;
-
-			prueba.start();
-			System.out.println(prueba.getState());
-		} else {
-
-			prueba.interrupt();
-
-			while (prueba.getState() != Thread.State.TERMINATED) {
-				System.out.println("xd");
-			}
-
-			prueba = new Thread(dis);
-			prueba.start();
-
-			System.out.println(prueba.getState());
-		}
+		prueba = new Thread(dis);
+		prueba.start();
 	}
 
 	public void paintComponent(Graphics g) {
@@ -70,30 +60,42 @@ public class DibujoJugador extends JPanel implements Runnable {
 //		g.drawImage(j[0].getImage(), p[0][0], p[0][1], null);
 //		g.drawImage(j[0].getImage(), p[1][0], p[1][1], null);
 
-		if (p[0][0] == p[1][0] && p[1][0] == p[2][0]) {
-			
+		// J1 y J2 estan en la misma posicion
+		boolean j1j2X = p[0][0] == p[1][0];
+		boolean j1j2Y = p[0][1] == p[1][1];
+
+		// J1 y J3 estan en la misma posicion
+		boolean j1j3X = p[0][0] == p[2][0];
+		boolean j1j3Y = p[0][1] == p[2][1];
+
+		// J2 y J3 estan en la misma posicion
+		boolean j2j3X = p[1][0] == p[2][0];
+		boolean j2j3Y = p[1][1] == p[2][1];
+
+		if (j1j2X && j2j3X && j1j2Y && j2j3Y) {
+
 			g.drawImage(j[0].getImage(), p[0][0] + 10, p[0][1], null);
 			g.drawImage(j[1].getImage(), p[1][0] - 10, p[1][1] - 10, null);
 			g.drawImage(j[2].getImage(), p[2][0] - 10, p[2][1] + 10, null);
-			
-		} else if (p[0][0] == p[1][0]) {
-			
+
+		} else if (j1j2X && j1j2Y) {
+
 			g.drawImage(j[0].getImage(), p[0][0] + 10, p[0][1], null);
 			g.drawImage(j[1].getImage(), p[1][0] - 10, p[1][1], null);
 			g.drawImage(j[2].getImage(), p[2][0], p[2][1], null);
 
-		} else if (p[0][0] == p[2][0]) {
+		} else if (j1j3X && j1j3Y) {
 			g.drawImage(j[1].getImage(), p[1][0], p[1][1], null);
 
 			g.drawImage(j[0].getImage(), p[0][0] + 10, p[0][1], null);
 			g.drawImage(j[2].getImage(), p[2][0] - 10, p[2][1], null);
-			
-		} else if (p[1][0] == p[2][0]) {
+
+		} else if (j2j3X && j2j3Y) {
 			g.drawImage(j[0].getImage(), p[0][0], p[0][1], null);
 
 			g.drawImage(j[1].getImage(), p[1][0] + 10, p[1][1], null);
 			g.drawImage(j[2].getImage(), p[2][0] - 10, p[2][1], null);
-			
+
 		} else {
 			g.drawImage(j[0].getImage(), p[0][0], p[0][1], null);
 			g.drawImage(j[1].getImage(), p[1][0], p[1][1], null);
@@ -107,7 +109,9 @@ public class DibujoJugador extends JPanel implements Runnable {
 		animarCasillas(movimientos);
 	}
 
-	private synchronized void animarCasillas(int n) {
+	private void animarCasillas(int n) {
+
+		moviendose = true;
 
 		boolean tope = false;
 //		boolean sumar = sentido(p[targetJugador][0]);
@@ -161,6 +165,14 @@ public class DibujoJugador extends JPanel implements Runnable {
 			}
 
 		}
+
+		synchronized (test1) {
+			test1.notifyAll();
+		}
+
+		moviendose = false;
+
+		prueba.interrupt();
 	}
 
 	private synchronized void animarObjetos() {

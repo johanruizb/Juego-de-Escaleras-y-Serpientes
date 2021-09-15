@@ -244,31 +244,39 @@ public class GUIEscaleraSerpientes extends JFrame {
 		return auxPoint;
 	}
 
-	private class Escucha implements ActionListener {
+	private class Escucha implements ActionListener, Runnable {
+		private Thread x;
+		private int j = 1;
 
 		@Override
 		public synchronized void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
+			x = new Thread(this);
+			x.start();
+		}
+
+		@Override
+		public synchronized void run() {
+			// TODO Auto-generated method stub
 			mover.setEnabled(false);
 
-			Thread x = new Thread(new Runnable() {
+			int movimientos = control.lanzarDados(j);
+			panelJugadores.setPosition(movimientos, j, this);
+			j++;
 
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					int movimientos = control.lanzarDados(1);
-					panelJugadores.setPosition(movimientos, 1);
+			if (j == 4) {
+				j = 1;
+			}
 
-					try {
-						Thread.sleep((DibujoJugador.ESPERA * 48 * movimientos));
-					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					mover.setEnabled(true);
-				}
-			});
-			x.start();
+			try {
+				wait();
+				mover.setEnabled(true);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+			x.interrupt();
 		}
 
 	}

@@ -107,7 +107,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 		// AÑADIR LAS CAPAS
 		capas.add(panelTablero, new Integer(2));
-//		capas.add(panelDibujo, new Integer(1));
+		capas.add(panelDibujo, new Integer(1));
 		capas.add(panelJugadores, new Integer(3));
 
 		// BOTON
@@ -279,7 +279,6 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 			}
 			x.interrupt();
-
 		}
 
 	}

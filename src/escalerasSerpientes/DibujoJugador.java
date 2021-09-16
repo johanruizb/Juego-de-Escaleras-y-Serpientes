@@ -44,7 +44,6 @@ public class DibujoJugador extends JPanel implements Runnable {
 	}
 
 	public void setPosition(int m, int jugador, Runnable r) {
-
 		targetJugador = jugador - 1;
 
 		movimientos = m;
@@ -163,14 +162,36 @@ public class DibujoJugador extends JPanel implements Runnable {
 
 		}
 
-		synchronized (test1) {
-			test1.notifyAll();
+		for (ArrayList<Integer> list1 : serpientes) {
+			if (p[targetJugador][0] == list1.get(0) && p[targetJugador][1] == list1.get(1)) {
+
+				target[0] = list1.get(2);
+				target[1] = list1.get(3);
+
+				animarObjetos();
+			}
 		}
 
-		prueba.interrupt();
+		for (ArrayList<Integer> list1 : escaleras) {
+			if (p[targetJugador][0] == list1.get(0) && p[targetJugador][1] == list1.get(1)) {
+
+				target[0] = list1.get(2);
+				target[1] = list1.get(3);
+
+				animarObjetos();
+			}
+		}
+
+		synchronized (test1) {
+			prueba.interrupt();
+			test1.notifyAll();
+		}
 	}
 
 	private synchronized void animarObjetos() {
+
+		System.out.println("X target es: " + (target[0]));
+		System.out.println("Y target es: " + (target[1]));
 
 		while (!(p[targetJugador][0] == target[0] && p[targetJugador][1] == target[1])) {
 
@@ -179,7 +200,6 @@ public class DibujoJugador extends JPanel implements Runnable {
 //			System.out.println("X es: " + (p[targetJugador][0]));
 //			System.out.println("Y es: " + (p[targetJugador][1]));
 
-//			System.out.println("X target es: " + (target[0]));
 //			System.out.println("Tope es: " + tope);
 
 			if (p[targetJugador][0] < target[0] && p[targetJugador][0] < 368) {

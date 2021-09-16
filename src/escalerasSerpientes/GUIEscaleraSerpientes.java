@@ -271,14 +271,14 @@ public class GUIEscaleraSerpientes extends JFrame {
 				}
 
 				try {
-					wait();
-					mover.setEnabled(true);
+					this.wait();
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 
 			}
+			mover.setEnabled(true);
 			x.interrupt();
 		}
 

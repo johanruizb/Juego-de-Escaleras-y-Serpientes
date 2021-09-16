@@ -19,7 +19,8 @@ public class DibujoJugador extends JPanel implements Runnable {
 	private int[][] p = new int[][] { { 8, 368 }, { 8, 368 }, { 8, 368 } };
 
 	private int[] target = new int[] { -1, -1 };
-	private int targetJugador = 1, movimientos = 0;
+	private int targetJugador = -1, movimientos = 0;
+	private boolean moviendo = false;
 
 	// Tableros
 	private ArrayList<Integer> limites = new ArrayList<>(Arrays.asList(368, 288, 208, 128, 48));
@@ -62,19 +63,19 @@ public class DibujoJugador extends JPanel implements Runnable {
 		boolean j1j3X = false, j1j3Y = false;
 		boolean j2j3X = false, j2j3Y = false;
 
-		System.out.println(p[1].equals(p[targetJugador]));
-		if (!p[0].equals(p[targetJugador]) && !p[1].equals(p[targetJugador])) {
+//		System.out.println(p[1].equals(p[targetJugador]));
+		if (targetJugador != -1 && (!p[0].equals(p[targetJugador]) && !p[1].equals(p[targetJugador]))) {
 			// J1 y J2 estan en la misma posicion
 			j1j2X = p[0][0] == p[1][0];
 			j1j2Y = p[0][1] == p[1][1];
 		}
-		if (!p[0].equals(p[targetJugador]) && !p[2].equals(p[targetJugador])) {
+		if (targetJugador != -1 && !p[0].equals(p[targetJugador]) && !p[2].equals(p[targetJugador])) {
 			// J1 y J3 estan en la misma posicion
 			j1j3X = p[0][0] == p[2][0];
 			j1j3Y = p[0][1] == p[2][1];
 		}
 
-		if (!p[1].equals(p[targetJugador]) && !p[2].equals(p[targetJugador])) {
+		if (targetJugador != -1 && !p[1].equals(p[targetJugador]) && !p[2].equals(p[targetJugador])) {
 			// J2 y J3 estan en la misma posicion
 			j2j3X = p[1][0] == p[2][0];
 			j2j3Y = p[1][1] == p[2][1];
@@ -120,7 +121,8 @@ public class DibujoJugador extends JPanel implements Runnable {
 	private void animarCasillas(int n) {
 
 		boolean tope = false;
-//		boolean sumar = sentido(p[targetJugador][0]);
+
+		moviendo = true;
 
 		int altura = p[targetJugador][1];
 		int mov = 0;
@@ -191,6 +193,8 @@ public class DibujoJugador extends JPanel implements Runnable {
 				animarObjetos();
 			}
 		}
+
+		moviendo = false;
 
 		synchronized (test1) {
 			prueba.interrupt();

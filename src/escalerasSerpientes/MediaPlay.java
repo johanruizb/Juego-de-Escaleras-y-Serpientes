@@ -37,8 +37,6 @@ public class MediaPlay {
 		musica.play();
        
 	}
-
-	
 	
 	/*public int algunMetodo() {
         File file= new File(son).getAbsoluteFile();
@@ -71,10 +69,10 @@ public class MediaPlay {
 
 	}
 
-	/*public final javafx.util.Duration getTotalDuration() {
-		javafx.util.Duration time = musica.getTotalDuration();
+	/*		javafx.util.Duration time = musica.getTotalDuration();
 
-		return null;
+		return time.toSeconds();
 
 	}*/
+	
 }

@@ -40,12 +40,13 @@ public class GUIEscaleraSerpientes extends JFrame {
 	// private TableroJuego control;
 	private MediaPlay play;
 	private String ruta;
-	private static int contador;
+	private static int contador =1;
 
 	public GUIEscaleraSerpientes() {
 
 		// TODO Auto-generated method stub
 		initGUI();
+		play.reproducir();
 		this.setTitle("Esacaleras y Serpientes");
 		this.setVisible(true);
 		this.setSize(650, 450);
@@ -163,7 +164,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 	public String aleatorio() {
 		Random ran = new Random();
-		ruta = String.valueOf(ran.nextInt(7) + 1);
+		ruta = String.valueOf(ran.nextInt(4) + 1);
 		return ruta;
 	}
 
@@ -252,6 +253,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 		@Override
 		public synchronized void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
+			
 			x = new Thread(this);
 			x.start();
 		}

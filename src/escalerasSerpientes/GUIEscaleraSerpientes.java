@@ -27,19 +27,20 @@ import javafx.scene.Scene;
 public class GUIEscaleraSerpientes extends JFrame {
 
 	private static final long serialVersionUID = -142202431892957518L;
-	private DibujoEscalerasSerpientes dibujo;
-	private DibujoJugador jugadores;
-	private JPanel tableroJuego, componentes;
-	private ArrayList<JLabel> tablero = new ArrayList<JLabel>(100);
+	private DibujoEscalerasSerpientes panelDibujo;
+	private DibujoJugador panelJugadores;
+	private JPanel panelTablero, componentes;
+	private ArrayList<JLabel> tableroVista = new ArrayList<JLabel>(100);
 	private Escucha escucha;
 	private EscuchaPlay escuchaplay;
 	private JButton mover, reproducir;
-	private TableroJuego t1;
+
+	private ControlJuego control;
+
+	// private TableroJuego control;
 	private MediaPlay play;
 	private String ruta;
 	private static int contador;
-	//
-	private JFrame dis = this;
 
 	public GUIEscaleraSerpientes() {
 
@@ -57,19 +58,18 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 		escucha = new Escucha();
 		escuchaplay = new EscuchaPlay();
+		control = new ControlJuego();
 
 		JLayeredPane capas = new JLayeredPane();
 		capas.setSize(500, 500);
 
 		// TABLERO GUI
 		componentes = new JPanel(new BorderLayout());
-		tableroJuego = new JPanel(new GridLayout(10, 10));
-//		tableroJuego.setSize(500, 500);
-		tableroJuego.setOpaque(false);
-		tableroJuego.setBounds(18, 6, 400, 400);
+		panelTablero = new JPanel(new GridLayout(10, 10));
+		panelTablero.setOpaque(false);
+		panelTablero.setBounds(18, 6, 400, 400);
 
-		t1 = new TableroJuego();
-		ArrayList<ArrayList<Integer>> t2 = t1.getTablero();
+		ArrayList<ArrayList<Integer>> tablero = control.getTablero();
 		int k = 0;
 
 		// AÑADIR AL TABLERO
@@ -79,14 +79,14 @@ public class GUIEscaleraSerpientes extends JFrame {
 			for (int j = 0; j < 10; j++) {
 
 				JLabel temp = new JLabel();
-				temp.setText(String.valueOf(t2.get(i).get(j)));
+				temp.setText(String.valueOf(tablero.get(i).get(j)));
 				temp.setPreferredSize(new Dimension(20, 20));
 				temp.setVerticalAlignment(JLabel.CENTER);
 				temp.setHorizontalAlignment(JLabel.CENTER);
 				temp.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 
-				tablero.add(temp);
-				tableroJuego.add(tablero.get(k));
+				tableroVista.add(temp);
+				panelTablero.add(tableroVista.get(k));
 				k++;
 			}
 		}
@@ -99,17 +99,17 @@ public class GUIEscaleraSerpientes extends JFrame {
 		pEscaleras.addAll(posicionEscaleras());
 		// ---
 		// DIBUJO
-		dibujo = new DibujoEscalerasSerpientes(pSerpientes, pEscaleras);
-		dibujo.setSize(500, 500);
+		panelDibujo = new DibujoEscalerasSerpientes(pSerpientes, pEscaleras);
+		panelDibujo.setSize(500, 500);
 
 		// JUGADORES
-		jugadores = new DibujoJugador(pSerpientes, pEscaleras);
-		jugadores.setBounds(18, 6, 400, 400);
+		panelJugadores = new DibujoJugador(pSerpientes, pEscaleras);
+		panelJugadores.setBounds(18, 6, 400, 400);
 
 		// AÑADIR LAS CAPAS
-		capas.add(tableroJuego, new Integer(2));
-		capas.add(dibujo, new Integer(1));
-		capas.add(jugadores, new Integer(3));
+		capas.add(panelTablero, new Integer(2));
+		capas.add(panelDibujo, new Integer(1));
+		capas.add(panelJugadores, new Integer(3));
 
 		// BOTON
 
@@ -130,6 +130,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 			}
 
 		});
+
 		// BORON DE REPRODUCCION
 		reproducir = new JButton(new ImageIcon("src/imagenes/on.png"));
 		reproducir.addActionListener(escuchaplay);
@@ -150,14 +151,14 @@ public class GUIEscaleraSerpientes extends JFrame {
 		add(capas, BorderLayout.CENTER);
 		// add(mover, BorderLayout.EAST);
 		add(componentes, BorderLayout.EAST);
+
+		control.setName("jr0237");
 	}
 
 	private static Scene initScene() {
-
 		Group root = new Group();
 		Scene scene = new Scene(root, javafx.scene.paint.Color.ALICEBLUE);
 		return (scene);
-
 	}
 
 	public String aleatorio() {
@@ -169,12 +170,12 @@ public class GUIEscaleraSerpientes extends JFrame {
 	private ArrayList<ArrayList<Integer>> posicionEscaleras() {
 		// TODO Auto-generated method stub
 
-		ArrayList<ArrayList<Integer>> t2 = t1.getTablero();
+		ArrayList<ArrayList<Integer>> tablero = control.getTablero();
 
 		ArrayList<ArrayList<Integer>> escaleras = new ArrayList<ArrayList<Integer>>();
 		ArrayList<ArrayList<Integer>> auxPoint2 = new ArrayList<>();
 
-		escaleras.addAll(t1.getEscaleras());
+		escaleras.addAll(control.getEscaleras());
 
 		for (int i = 0; i < escaleras.size(); i++) {
 			int fila = -1;
@@ -194,7 +195,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 				}
 
-				columna = t2.get(fila).indexOf(escaleras.get(i).get(j));
+				columna = tablero.get(fila).indexOf(escaleras.get(i).get(j));
 
 				auxPoint2.get(i).add((columna * 40) + 8);
 				auxPoint2.get(i).add((fila * 40) + 8);
@@ -208,12 +209,12 @@ public class GUIEscaleraSerpientes extends JFrame {
 	private ArrayList<ArrayList<Integer>> posicionSerpientes() {
 		// TODO Auto-generated method stub
 
-		ArrayList<ArrayList<Integer>> t2 = t1.getTablero();
+		ArrayList<ArrayList<Integer>> tablero = control.getTablero();
 
 		ArrayList<ArrayList<Integer>> serpientes = new ArrayList<ArrayList<Integer>>();
 		ArrayList<ArrayList<Integer>> auxPoint = new ArrayList<>();
 
-		serpientes.addAll(t1.getSerpientes());
+		serpientes.addAll(control.getSerpientes());
 
 		for (int i = 0; i < serpientes.size(); i++) {
 			int fila = -1;
@@ -233,7 +234,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 				}
 
-				columna = t2.get(fila).indexOf(serpientes.get(i).get(j));
+				columna = tablero.get(fila).indexOf(serpientes.get(i).get(j));
 
 				auxPoint.get(i).add((columna * 40) + 8);
 				auxPoint.get(i).add((fila * 40) + 8);
@@ -244,17 +245,43 @@ public class GUIEscaleraSerpientes extends JFrame {
 		return auxPoint;
 	}
 
-	private class Escucha implements ActionListener {
+	private class Escucha implements ActionListener, Runnable {
+		private Thread x;
+		private int j = 1;
 
 		@Override
 		public synchronized void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-
-			mover.setEnabled(false);
-			jugadores.setPosition(21, 1);
-//			mover.setEnabled(true);
-
+			x = new Thread(this);
+			x.start();
 		}
+
+		@Override
+		public synchronized void run() {
+			// TODO Auto-generated method stub
+			while (!control.isWin()) {
+				mover.setEnabled(false);
+
+				int movimientos = control.lanzarDados(j);
+				panelJugadores.setPosition(movimientos, j, this);
+				j++;
+
+				if (j == 4) {
+					j = 1;
+				}
+
+				try {
+					wait();
+					mover.setEnabled(true);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+			x.interrupt();
+		}
+
 	}
 	
 
@@ -272,7 +299,6 @@ public class GUIEscaleraSerpientes extends JFrame {
 		
 			}
 			if (contador == 2) {
-
 				reproducir.setIcon(new ImageIcon("src/imagenes/off.png"));
 				play.pausar();
 			}

@@ -30,9 +30,8 @@ public class MediaPlay {
 		String ruta = "src/sonidos/" + son + ".mp3";
 		audio = new Media(new File(ruta).toURI().toString());
 		musica = new MediaPlayer(audio);
-
 	}
-
+	
 	public void reproducir() {
 
 		musica.play();

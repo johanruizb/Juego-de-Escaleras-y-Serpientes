@@ -20,4 +20,16 @@ public class Jugador {
 		if (posicion < 7 && posicion > 0)
 			this.posicion += posicion;
 	}
+
+	public void escalera() {
+		System.out.println("Escalera");
+
+		posicion += 18;
+	}
+
+	public void serpiente() {
+		System.out.println("Serpiente");
+
+		posicion -= 18;
+	}
 }

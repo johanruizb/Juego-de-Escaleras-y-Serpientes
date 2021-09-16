@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -255,6 +256,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 		}
 	}
+	
 
 //CLASE PARA EL MANEJO DE LA REPRODUCCION DE LA MUSICA
 	private class EscuchaPlay implements ActionListener {
@@ -265,6 +267,9 @@ public class GUIEscaleraSerpientes extends JFrame {
 			if (e.getSource() == reproducir) {
 				contador++;
 				play.reproducir();
+			     play.getDuration();
+				
+		
 			}
 			if (contador == 2) {
 

@@ -3,8 +3,10 @@ package escalerasSerpientes;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Random;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javafx.application.Platform;
@@ -19,8 +21,11 @@ public class Tirar extends JFrame {
 	// private MediaPlay play;
 
 	private MediaPlay play;
-	private String ruta;
-
+	//private String ruta;
+	private JButton reproducir;
+	private static int contador;
+	private EscuchaPlay escuchaplay;
+ private String ruta = "src/sonidos/1.mp3";
 	public Tirar() {
 		initGUI();
 		this.setTitle("Esacaleras y Serpientes");
@@ -33,7 +38,7 @@ public class Tirar extends JFrame {
 
 	private void initGUI() {
 		// TODO Auto-generated method stub
-
+        escuchaplay = new EscuchaPlay();
 		JFXPanel panel = new JFXPanel();
 		play = new MediaPlay(aleatorio());
 
@@ -48,17 +53,14 @@ public class Tirar extends JFrame {
 
 		});
 
-		JButton b = new JButton("Reproducir");
-		b.addActionListener(new ActionListener() {
+		reproducir = new JButton(new ImageIcon("src/imagenes/on.png"));
+		reproducir.addActionListener(escuchaplay); 
+		reproducir.setBorder(null);
+		reproducir.setContentAreaFilled(false);
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				play.reproducir();
-			}
-		});
+		
 
-		add(b, BorderLayout.CENTER);
+		add(reproducir, BorderLayout.CENTER);
 		add(panel, BorderLayout.NORTH);
 	}
 
@@ -73,6 +75,29 @@ public class Tirar extends JFrame {
 		Random ran = new Random();
 		ruta = String.valueOf(ran.nextInt(2)+1);
 		return ruta;
+	}
+	private class EscuchaPlay implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			if (e.getSource() == reproducir) {
+				contador++;
+			 
+			    	 play.pausar();
+			}
+			if (contador == 2) {
+
+				reproducir.setIcon(new ImageIcon("src/imagenes/off.png"));
+				play.pausar();
+			}
+			if (contador == 3) {
+				contador = 1;
+				reproducir.setIcon(new ImageIcon("src/imagenes/on.png"));
+				play.reproducir();
+			}
+		}
+
 	}
 
 }

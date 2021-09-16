@@ -35,11 +35,11 @@ public class ControlJuego {
 
 			if (x[0]) {
 				j1.escalera();
-				System.out.println("J1: " + j1.getPosicion());
+//				System.out.println("J1: " + j1.getPosicion());
 				esc = 1;
 			} else if (x[1]) {
 				j1.serpiente();
-				System.out.println("J1: " + j1.getPosicion());
+//				System.out.println("J1: " + j1.getPosicion());
 				serp = 1;
 			}
 			break;

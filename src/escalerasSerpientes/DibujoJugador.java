@@ -58,17 +58,27 @@ public class DibujoJugador extends JPanel implements Runnable {
 //		g.drawImage(j[0].getImage(), p[0][0], p[0][1], null);
 //		g.drawImage(j[0].getImage(), p[1][0], p[1][1], null);
 
-		// J1 y J2 estan en la misma posicion
-		boolean j1j2X = p[0][0] == p[1][0];
-		boolean j1j2Y = p[0][1] == p[1][1];
+		boolean j1j2X = false, j1j2Y = false;
+		boolean j1j3X = false, j1j3Y = false;
+		boolean j2j3X = false, j2j3Y = false;
 
-		// J1 y J3 estan en la misma posicion
-		boolean j1j3X = p[0][0] == p[2][0];
-		boolean j1j3Y = p[0][1] == p[2][1];
+		System.out.println(p[1].equals(p[targetJugador]));
+		if (!p[0].equals(p[targetJugador]) && !p[1].equals(p[targetJugador])) {
+			// J1 y J2 estan en la misma posicion
+			j1j2X = p[0][0] == p[1][0];
+			j1j2Y = p[0][1] == p[1][1];
+		}
+		if (!p[0].equals(p[targetJugador]) && !p[2].equals(p[targetJugador])) {
+			// J1 y J3 estan en la misma posicion
+			j1j3X = p[0][0] == p[2][0];
+			j1j3Y = p[0][1] == p[2][1];
+		}
 
-		// J2 y J3 estan en la misma posicion
-		boolean j2j3X = p[1][0] == p[2][0];
-		boolean j2j3Y = p[1][1] == p[2][1];
+		if (!p[1].equals(p[targetJugador]) && !p[2].equals(p[targetJugador])) {
+			// J2 y J3 estan en la misma posicion
+			j2j3X = p[1][0] == p[2][0];
+			j2j3Y = p[1][1] == p[2][1];
+		}
 
 		if (j1j2X && j2j3X && j1j2Y && j2j3Y) {
 
@@ -157,7 +167,7 @@ public class DibujoJugador extends JPanel implements Runnable {
 				Thread.sleep(ESPERA);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("La espera ha sido interrumpida");
 			}
 
 		}
@@ -220,7 +230,7 @@ public class DibujoJugador extends JPanel implements Runnable {
 				Thread.sleep(ESPERA);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("La espera ha sido interrumpida");
 			}
 		}
 

@@ -14,6 +14,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -22,57 +23,48 @@ public class MediaPlay {
 	private Media audio;
 	private MediaPlayer musica;
 	private String son;
-	private ReadOnlyIntegerProperty siclos;
-	private int x;
+	private javafx.util.Duration time, time2;
 
 	public MediaPlay(String nombre) {
 		this.son = nombre;
 		String ruta = "src/sonidos/" + son + ".mp3";
 		audio = new Media(new File(ruta).toURI().toString());
 		musica = new MediaPlayer(audio);
+
 	}
-	
+
 	public void reproducir() {
 
+		musica.setCycleCount(musica.INDEFINITE);
+	
 		musica.play();
-       
+
 	}
-	
-	/*public int algunMetodo() {
-        File file= new File(son).getAbsoluteFile();
-	    AudioFileFormat audioFileFormat = null;
-		try {
-			audioFileFormat = AudioSystem.getAudioFileFormat(file);
-		} catch (UnsupportedAudioFileException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	    Map<String, Object>  properties = ((AudioFileFormat) audioFileFormat).properties();
 
-
-	    Long micro = (Long) properties.get("duration");
-	    int a      = (int) (micro / 1000);
-	    int r      = (a / 1000) % 60;
- System.out.println("soy " + r);
-	    return r;
-	}*/
-	
-	
 	public void pausar() {
 		musica.pause();
 	}
 
+	public void stop() {
+		musica.stop();
+	}
+
 	// DURACCION DEL AUDIO
-	public int getDuration() {
-		audio.durationProperty();
-		return 0;
+
+	public double duracion() {
+
+		time = musica.getTotalDuration();
+
+		System.out.println("Soy duracion = " + time);
+		return time.toSeconds();
 
 	}
 
-	/*		javafx.util.Duration time = musica.getTotalDuration();
+	public final MediaPlayer.Status getStatus() {
+		System.out.println("Soy el estado actual " + musica.getStatus());
+		return musica.getStatus();
 
-		return time.toSeconds();
+	}
 
-	}*/
 	
 }

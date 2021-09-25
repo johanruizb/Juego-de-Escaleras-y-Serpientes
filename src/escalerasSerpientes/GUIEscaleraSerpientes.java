@@ -40,7 +40,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 	// private TableroJuego control;
 	private MediaPlay play;
 	private String ruta;
-	private static int contador =1;
+	private static int contador = 1;
 
 	public GUIEscaleraSerpientes() {
 
@@ -164,7 +164,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 	public String aleatorio() {
 		Random ran = new Random();
-		ruta = String.valueOf(ran.nextInt(4) + 1);
+		ruta = String.valueOf(ran.nextInt(10) + 1);
 		return ruta;
 	}
 
@@ -253,7 +253,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 		@Override
 		public synchronized void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-			
+
 			x = new Thread(this);
 			x.start();
 		}
@@ -285,7 +285,6 @@ public class GUIEscaleraSerpientes extends JFrame {
 		}
 
 	}
-	
 
 //CLASE PARA EL MANEJO DE LA REPRODUCCION DE LA MUSICA
 	private class EscuchaPlay implements ActionListener {
@@ -294,17 +293,23 @@ public class GUIEscaleraSerpientes extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			if (e.getSource() == reproducir) {
+
 				contador++;
+				//play.setOnRepeat();
 				play.reproducir();
-			     play.getDuration();
-				
-		
+//               play.currentTimeProperty();
+               play.getStatus();
 			}
+
 			if (contador == 2) {
+
 				reproducir.setIcon(new ImageIcon("src/imagenes/off.png"));
 				play.pausar();
+
 			}
+
 			if (contador == 3) {
+
 				contador = 1;
 				reproducir.setIcon(new ImageIcon("src/imagenes/on.png"));
 				play.reproducir();
@@ -312,4 +317,5 @@ public class GUIEscaleraSerpientes extends JFrame {
 		}
 
 	}
+
 }

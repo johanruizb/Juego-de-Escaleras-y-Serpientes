@@ -1,6 +1,5 @@
 package escalerasSerpientes;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +10,7 @@ import javax.swing.JPanel;
 public class DibujoJugador extends JPanel implements Runnable {
 
 	private static final long serialVersionUID = -1333670092518533289L;
-	public static int ESPERA = 8;
+	public static int ESPERA = 17;
 
 	// Juego
 	private ImageIcon[] j = new ImageIcon[] { new ImageIcon("src/imagenes/j1.png"),
@@ -20,8 +19,6 @@ public class DibujoJugador extends JPanel implements Runnable {
 
 	private int[] target = new int[] { -1, -1 };
 	private int targetJugador = -1, movimientos = 0;
-	private boolean moviendo = false;
-
 	// Tableros
 	private ArrayList<Integer> limites = new ArrayList<>(Arrays.asList(368, 288, 208, 128, 48));
 	private ArrayList<Integer> limites2 = new ArrayList<>(Arrays.asList(368, 328, 288, 248, 208, 168, 128, 88, 48, 8));
@@ -56,27 +53,25 @@ public class DibujoJugador extends JPanel implements Runnable {
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-//		g.drawImage(j[0].getImage(), p[0][0], p[0][1], null);
-//		g.drawImage(j[0].getImage(), p[1][0], p[1][1], null);
 
 		boolean j1j2X = false, j1j2Y = false;
 		boolean j1j3X = false, j1j3Y = false;
 		boolean j2j3X = false, j2j3Y = false;
 
-//		System.out.println(p[1].equals(p[targetJugador]));
-		if (targetJugador != -1 && (!p[0].equals(p[targetJugador]) && !p[1].equals(p[targetJugador]))) {
-			// J1 y J2 estan en la misma posicion
+		// J1 y J2 estan en la misma posicion
+		if (targetJugador != 0 && targetJugador != 1) {
 			j1j2X = p[0][0] == p[1][0];
 			j1j2Y = p[0][1] == p[1][1];
 		}
-		if (targetJugador != -1 && !p[0].equals(p[targetJugador]) && !p[2].equals(p[targetJugador])) {
-			// J1 y J3 estan en la misma posicion
+
+		// J1 y J3 estan en la misma posicion
+		if (targetJugador != 0 && targetJugador != 2) {
 			j1j3X = p[0][0] == p[2][0];
 			j1j3Y = p[0][1] == p[2][1];
 		}
 
-		if (targetJugador != -1 && !p[1].equals(p[targetJugador]) && !p[2].equals(p[targetJugador])) {
-			// J2 y J3 estan en la misma posicion
+		// J2 y J3 estan en la misma posicion
+		if (targetJugador != 1 && targetJugador != 2) {
 			j2j3X = p[1][0] == p[2][0];
 			j2j3Y = p[1][1] == p[2][1];
 		}
@@ -122,20 +117,10 @@ public class DibujoJugador extends JPanel implements Runnable {
 
 		boolean tope = false;
 
-		moviendo = true;
-
 		int altura = p[targetJugador][1];
 		int mov = 0;
 
-		while (!(mov == n) && !(p[targetJugador][1] - 7 < 0)) {
-
-//			System.out.println("es: " + (p[targetJugador][0] > target[0] && p[targetJugador][0] != 26));
-
-//			System.out.println("X es: " + (p[targetJugador][0]));
-//			System.out.println("Y es: " + (p[targetJugador][1]));
-
-//			System.out.println("X target es: " + (target[0]));
-//			System.out.println("Tope es: " + tope);
+		while (!(mov == n)) {
 
 			if (limites.contains(p[targetJugador][1]) && p[targetJugador][0] < 368) {
 				p[targetJugador][0]++;
@@ -146,10 +131,6 @@ public class DibujoJugador extends JPanel implements Runnable {
 			} else {
 				tope = true;
 			}
-
-//			if (tope && p[targetJugador][1] - altura < 40) {
-//				p[targetJugador][1]++;
-//			}
 
 			if (limites2.contains(p[targetJugador][0]) && !tope) {
 				mov++;
@@ -181,6 +162,7 @@ public class DibujoJugador extends JPanel implements Runnable {
 				target[1] = list1.get(3);
 
 				animarObjetos();
+				break;
 			}
 		}
 
@@ -191,10 +173,12 @@ public class DibujoJugador extends JPanel implements Runnable {
 				target[1] = list1.get(3);
 
 				animarObjetos();
+				break;
 			}
 		}
 
-		moviendo = false;
+		targetJugador = -1;
+		repaint();
 
 		synchronized (test1) {
 			prueba.interrupt();
@@ -202,19 +186,9 @@ public class DibujoJugador extends JPanel implements Runnable {
 		}
 	}
 
-	private synchronized void animarObjetos() {
-
-		System.out.println("X target es: " + (target[0]));
-		System.out.println("Y target es: " + (target[1]));
+	private void animarObjetos() {
 
 		while (!(p[targetJugador][0] == target[0] && p[targetJugador][1] == target[1])) {
-
-//			System.out.println("es: " + (p[targetJugador][0] > target[0] && p[targetJugador][0] != 26));
-
-//			System.out.println("X es: " + (p[targetJugador][0]));
-//			System.out.println("Y es: " + (p[targetJugador][1]));
-
-//			System.out.println("Tope es: " + tope);
 
 			if (p[targetJugador][0] < target[0] && p[targetJugador][0] < 368) {
 				p[targetJugador][0]++;
@@ -237,8 +211,6 @@ public class DibujoJugador extends JPanel implements Runnable {
 				System.out.println("La espera ha sido interrumpida");
 			}
 		}
-
-//		notifyAll();
 	}
 
 }

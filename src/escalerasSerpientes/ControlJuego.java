@@ -9,13 +9,22 @@ public class ControlJuego {
 
 	public ControlJuego() {
 		dado = new Dado();
+		
+		j1 = new Jugador("Jugador");
+		j2 = new Jugador("NPC 1");
+		j3 = new Jugador("NPC 2");
 	}
 
-	public void setName(String s) {
-		if (j1 == null) {
-			j1 = new Jugador(s);
-			j2 = new Jugador("NPC 1");
-			j3 = new Jugador("NPC 2");
+	public String getNanme(int i) {
+		switch (i) {
+		case 1:
+			return j1.getNombre();
+		case 2:
+			return j2.getNombre();
+		case 3:
+			return j3.getNombre();
+		default:
+			return null;
 		}
 	}
 

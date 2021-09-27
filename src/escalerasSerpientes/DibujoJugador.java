@@ -178,6 +178,7 @@ public class DibujoJugador extends JPanel implements Runnable {
 		}
 
 		targetJugador = -1;
+		repaint();
 
 		synchronized (test1) {
 			prueba.interrupt();

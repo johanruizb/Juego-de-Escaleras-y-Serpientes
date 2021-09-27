@@ -1,20 +1,6 @@
 package escalerasSerpientes;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.time.Duration;
-import java.util.Map;
-
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
-
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -35,7 +21,7 @@ public class MediaPlay {
 
 	public void reproducir() {
 
-		musica.setCycleCount(musica.INDEFINITE);
+		musica.setCycleCount(MediaPlayer.INDEFINITE);
 	
 		musica.play();
 

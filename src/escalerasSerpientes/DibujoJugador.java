@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 public class DibujoJugador extends JPanel implements Runnable {
 
 	private static final long serialVersionUID = -1333670092518533289L;
-	public static int ESPERA = 1;
+	public static int ESPERA = 17;
 
 	// Juego
 	private ImageIcon[] j = new ImageIcon[] { new ImageIcon("src/imagenes/j1.png"),

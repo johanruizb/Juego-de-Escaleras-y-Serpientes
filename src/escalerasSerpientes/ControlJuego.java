@@ -24,6 +24,10 @@ public class ControlJuego {
 
 		switch (i) {
 		case 1:
+
+			if (j1.getPosicion() + d1 > 100)
+				d1 = (100 - j1.getPosicion());
+
 			j1.setPosicion(d1);
 
 //			System.out.println("J1: " + j1.getPosicion());
@@ -39,37 +43,30 @@ public class ControlJuego {
 			}
 			break;
 		case 2:
+			if (j2.getPosicion() + d1 > 100)
+				d1 = (100 - j2.getPosicion());
+
 			j2.setPosicion(d1);
 
-//			System.out.println("J2: " + j2.getPosicion());
-
 			boolean[] x1 = pisando(j2);
-
 			if (x1[0]) {
 				j2.escalera();
-//				System.out.println("J2: " + j2.getPosicion());
-
 			} else if (x1[1]) {
 				j2.serpiente();
-//				System.out.println("J2: " + j2.getPosicion());
-
 			}
 			break;
 		case 3:
+
+			if (j3.getPosicion() + d1 > 100)
+				d1 = (100 - j3.getPosicion());
+
 			j3.setPosicion(d1);
 
-//			System.out.println("J3: " + j3.getPosicion());
-
 			boolean[] x2 = pisando(j3);
-
 			if (x2[0]) {
 				j3.escalera();
-//				System.out.println("J3: " + j3.getPosicion());
-
 			} else if (x2[1]) {
 				j3.serpiente();
-//				System.out.println("J3: " + j3.getPosicion());
-
 			}
 			break;
 		default:
@@ -105,11 +102,11 @@ public class ControlJuego {
 
 	public boolean isWin() {
 
-		if (j1.getPosicion() >= 100) {
+		if (j1.getPosicion() == 100) {
 			return true;
-		} else if (j2.getPosicion() >= 100) {
+		} else if (j2.getPosicion() == 100) {
 			return true;
-		} else if (j3.getPosicion() >= 100) {
+		} else if (j3.getPosicion() == 100) {
 			return true;
 		}
 

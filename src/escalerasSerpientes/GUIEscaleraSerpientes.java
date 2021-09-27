@@ -26,11 +26,11 @@ public class GUIEscaleraSerpientes extends JFrame {
 	private static final long serialVersionUID = -142202431892957518L;
 	private DibujoEscalerasSerpientes panelDibujo;
 	private DibujoJugador panelJugadores;
-	private JPanel panelTablero, componentes;
+	private JPanel panelTablero, componentes, botones;
 	private ArrayList<JLabel> tableroVista = new ArrayList<JLabel>(100);
 	private Escucha escucha;
 	private EscuchaPlay escuchaplay;
-	private JButton mover, reproducir;
+	private JButton dado, reproducir, salir, reiniciar;
 
 	private ControlJuego control;
 
@@ -96,6 +96,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 		ArrayList<ArrayList<Integer>> pEscaleras = new ArrayList<>();
 		pEscaleras.addAll(posicionEscaleras());
 		// ---
+
 		// DIBUJO
 		panelDibujo = new DibujoEscalerasSerpientes(pSerpientes, pEscaleras);
 		panelDibujo.setSize(500, 500);
@@ -109,10 +110,22 @@ public class GUIEscaleraSerpientes extends JFrame {
 		capas.add(panelDibujo, new Integer(1));
 		capas.add(panelJugadores, new Integer(3));
 
-		// BOTON
+		// BOTONES ---
+		botones = new JPanel();
 
-		mover = new JButton("Mover");
-		mover.addActionListener(escucha);
+		// DADO
+		JPanel dadoPanel = new JPanel();
+		dado = new JButton("Mover");
+		dado.addActionListener(escucha);
+		dadoPanel.add(dado);
+
+		// SALIR
+		salir = new JButton("Salir");
+		salir.addActionListener(escucha);
+
+		// REINICIAR
+		reiniciar = new JButton("Reiniciar");
+		reiniciar.addActionListener(escucha);
 
 		// REPRODUCTOR
 		JFXPanel panelsonido = new JFXPanel();
@@ -135,19 +148,20 @@ public class GUIEscaleraSerpientes extends JFrame {
 		reproducir.setBorder(null);
 		reproducir.setContentAreaFilled(false);
 
-		// add(b, BorderLayout.CENTER);
-		// add(panel, BorderLayout.NORTH);
+		// AÑADIR BOTONES
+		botones.add(panelsonido);
+		botones.add(reproducir);
+		botones.add(salir);
+		botones.add(reiniciar);
 
 		// AÑADIENDO COMPONENTES AL PANEL DE LA VISTA
 
-		componentes.add(panelsonido, BorderLayout.NORTH);
-		componentes.add(reproducir, BorderLayout.CENTER);
-		componentes.add(mover, BorderLayout.SOUTH);
+		componentes.add(botones, BorderLayout.NORTH);
+		componentes.add(dadoPanel, BorderLayout.SOUTH);
 
 		// AÑADIR COMPONENTES A LA VENTANA
-
 		add(capas, BorderLayout.CENTER);
-		// add(mover, BorderLayout.EAST);
+		// add(dado, BorderLayout.EAST);
 		add(componentes, BorderLayout.EAST);
 
 		control.setName("jr0237");
@@ -250,16 +264,21 @@ public class GUIEscaleraSerpientes extends JFrame {
 		@Override
 		public synchronized void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
+			if (e.getSource() == dado) {
+				x = new Thread(this);
+				x.start();
+			} else if (e.getSource() == salir) {
+				System.exit(0);
+			} else if (e.getSource() == reiniciar) {
 
-			x = new Thread(this);
-			x.start();
+			}
 		}
 
 		@Override
 		public synchronized void run() {
 			// TODO Auto-generated method stub
 			while (!control.isWin()) {
-				mover.setEnabled(false);
+				dado.setEnabled(false);
 
 				int movimientos = control.lanzarDados(j);
 				panelJugadores.setPosition(movimientos, j, this);
@@ -277,8 +296,12 @@ public class GUIEscaleraSerpientes extends JFrame {
 				}
 
 			}
-			mover.setEnabled(true);
-			x.interrupt();
+			if (!control.isWin()) {
+				dado.setEnabled(true);
+				x.interrupt();
+			} else {
+
+			}
 		}
 
 	}
@@ -292,10 +315,10 @@ public class GUIEscaleraSerpientes extends JFrame {
 			if (e.getSource() == reproducir) {
 
 				contador++;
-				//play.setOnRepeat();
+				// play.setOnRepeat();
 				play.reproducir();
 //               play.currentTimeProperty();
-               play.getStatus();
+				play.getStatus();
 			}
 
 			if (contador == 2) {

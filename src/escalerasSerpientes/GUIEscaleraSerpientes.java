@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -306,11 +308,30 @@ public class GUIEscaleraSerpientes extends JFrame {
 			// TODO Auto-generated method stub
 //			while (!control.isWin()) {
 
+			control.setThread(this);
+			control.initNPC();
+
 			for (int i = 0; i < 3; i++) {
 
-				int movimientos = control.lanzarDados(i + 1);
-				dado.setIcon(new ImageIcon("src/imagenes/" + movimientos + ".png"));
+				if (i == 0) {
+					try {
+						control.lanzar(1);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				int movimientos = control.getDado1();
+
+				dado.setIcon(new ImageIcon("src/imagenes/" + movimientos + ".png"));
 				panelJugadores.setPosition(movimientos, i + 1, this);
 
 				try {
@@ -321,10 +342,10 @@ public class GUIEscaleraSerpientes extends JFrame {
 				}
 
 				if (i < 2) {
-					mensajes.setText("Es el turno de tirar del " + control.getNanme(i + 2));
+					mensajes.setText("Es el turno de tirar del " + control.getName(i + 2));
 
 				} else {
-					mensajes.setText("Es el turno de tirar del " + control.getNanme(1));
+					mensajes.setText("Es el turno de tirar del " + control.getName(1));
 				}
 
 				dado.setIcon(new ImageIcon("src/imagenes/dado.png"));
@@ -337,6 +358,15 @@ public class GUIEscaleraSerpientes extends JFrame {
 						e1.printStackTrace();
 					}
 				}
+				synchronized (control) {
+					control.notify();
+				}
+//				try {
+//					this.wait();
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 			}
 
 			if (!control.isWin()) {

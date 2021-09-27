@@ -184,6 +184,7 @@ public class DibujoJugador extends JPanel implements Runnable {
 			prueba.interrupt();
 			test1.notifyAll();
 		}
+//		prueba.interrupt();
 	}
 
 	private void animarObjetos() {

@@ -1,11 +1,12 @@
 package escalerasSerpientes;
 
 public class Jugador {
-	private int posicion = 1;
+	private int posicion = 1, turno = -1;
 	private String nombre = null;
 
-	public Jugador(String s) {
+	public Jugador(String s, int i) {
 		nombre = s;
+		turno = i;
 	}
 
 	public int getPosicion() {
@@ -21,15 +22,17 @@ public class Jugador {
 			this.posicion += posicion;
 	}
 
+	public int getTurno() {
+		return turno;
+	}
+
 	public void escalera() {
 //		System.out.println("Escalera");
-
 		posicion += 18;
 	}
 
 	public void serpiente() {
 //		System.out.println("Serpiente");
-
 		posicion -= 18;
 	}
 }

@@ -2,12 +2,14 @@ package escalerasSerpientes;
 
 public class NPC implements Runnable {
 
-	private int posicion = 1, numero = 0;
+	private int posicion = 1, turno = 0;
 	private String nombre = null;
+	private ControlJuego recurso;
 
-	public NPC(String s, int i) {
+	public NPC(String s, int i, ControlJuego r) {
 		nombre = s;
-		numero = i;
+		turno = i;
+		recurso = r;
 	}
 
 	public int getPosicion() {
@@ -37,8 +39,12 @@ public class NPC implements Runnable {
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-
+		try {
+			recurso.lanzar(turno);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

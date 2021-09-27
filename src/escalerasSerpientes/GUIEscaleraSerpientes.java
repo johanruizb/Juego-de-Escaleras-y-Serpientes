@@ -298,7 +298,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 				//play.setOnRepeat();
 				play.reproducir();
 //               play.currentTimeProperty();
-               play.getStatus();
+               
 			}
 
 			if (contador == 2) {

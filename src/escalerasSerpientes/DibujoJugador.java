@@ -33,12 +33,48 @@ public class DibujoJugador extends JPanel implements Runnable {
 
 	public DibujoJugador(ArrayList<ArrayList<Integer>> s, ArrayList<ArrayList<Integer>> e) {
 		// TODO Auto-generated constructor stub
-
 		serpientes.addAll(s);
 		escaleras.addAll(e);
 
 		this.setSize(400, 400);
 		this.setOpaque(false);
+	}
+
+	public void setList(ArrayList<ArrayList<Integer>> auxPoint, ArrayList<ArrayList<Integer>> auxPoint2) {
+		serpientes.clear();
+		escaleras.clear();
+
+		serpientes.addAll(auxPoint);
+		escaleras.addAll(auxPoint2);
+	}
+
+	public void reiniciar() {
+//		if (prueba.getState() != Thread.State.TERMINATED)
+		prueba.interrupt();
+
+		while (prueba.getState() != Thread.State.TERMINATED) {
+
+			System.out.println("1");
+
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		synchronized (test1) {
+			test1.notify();
+		}
+
+		p = null;
+		target = null;
+
+		p = new int[][] { { 8, 368 }, { 8, 368 }, { 8, 368 } };
+		target = new int[] { -1, -1 };
+		targetJugador = -1;
+		movimientos = 0;
 	}
 
 	public void setPosition(int m, int jugador, Runnable r) {
@@ -49,6 +85,10 @@ public class DibujoJugador extends JPanel implements Runnable {
 
 		prueba = new Thread(dis);
 		prueba.start();
+	}
+
+	public void setThread(Runnable r) {
+		test1 = r;
 	}
 
 	public void paintComponent(Graphics g) {

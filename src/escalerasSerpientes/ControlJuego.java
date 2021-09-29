@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ControlJuego implements Runnable {
 	private Dado dado;
-	private TableroJuego tablero = new TableroJuego();
+	private TableroJuego tablero;
 	private Jugador j1;
 	private NPC j2, j3;
 	private int turno = 1, dado1, i;
@@ -13,7 +13,13 @@ public class ControlJuego implements Runnable {
 	private Thread n2, n3;
 
 	public ControlJuego() {
+		initControl();
+	}
+
+	private void initControl() {
+		// TODO Auto-generated method stub
 		dado = new Dado();
+		tablero = new TableroJuego();
 
 		j1 = new Jugador("Jugador", 1);
 		j2 = new NPC("NPC 1", 2, this);
@@ -38,11 +44,13 @@ public class ControlJuego implements Runnable {
 			switch (i) {
 			case 2:
 				synchronized (j2) {
+					System.out.println("Entra NPC 1 a espera");
 					j2.wait();
 				}
 				break;
 			case 3:
 				synchronized (j3) {
+					System.out.println("Entra NPC 2 a espera");
 					j3.wait();
 				}
 				break;
@@ -83,6 +91,7 @@ public class ControlJuego implements Runnable {
 			}
 			break;
 		case 2:
+			System.out.println("Inicia NPC 1");
 			if (j2.getPosicion() + dado1 > 100)
 				dado1 = (100 - j2.getPosicion());
 
@@ -106,6 +115,7 @@ public class ControlJuego implements Runnable {
 			}
 			break;
 		case 3:
+			System.out.println("Inicia NPC 2");
 			if (j3.getPosicion() + dado1 > 100)
 				dado1 = (100 - j3.getPosicion());
 
@@ -195,6 +205,28 @@ public class ControlJuego implements Runnable {
 		n2.start();
 		n3.start();
 	}
+
+	public void reiniciar() {
+		dado = null;
+		tablero = null;
+		j1 = null;
+		j2 = null;
+		j3 = null;
+
+		initControl();
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		try {
+			lanzarDados();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	// ----------
 
 	public ArrayList<ArrayList<Integer>> getTablero() {
@@ -216,17 +248,6 @@ public class ControlJuego implements Runnable {
 
 	public int getDado1() {
 		return dado1;
-	}
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		try {
-			lanzarDados();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 }

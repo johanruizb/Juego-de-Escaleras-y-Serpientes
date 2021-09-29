@@ -34,6 +34,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 	private Escucha escucha;
 	private EscuchaPlay escuchaplay;
 	private JButton dado, reproducir, salir, reiniciar;
+	private JLayeredPane capas = new JLayeredPane();
 
 	private ControlJuego control;
 
@@ -45,7 +46,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 		// TODO Auto-generated method stub
 		initGUI();
-		play.reproducir();
+//		play.reproducir();
 		this.setTitle("Esacaleras y Serpientes");
 		this.setVisible(true);
 		this.setSize(650, 450);
@@ -58,9 +59,8 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 		escucha = new Escucha();
 		escuchaplay = new EscuchaPlay();
-		control = new ControlJuego();
+		control = new ControlJuego(this);
 
-		JLayeredPane capas = new JLayeredPane();
 		capas.setSize(500, 500);
 
 		// TABLERO GUI
@@ -208,6 +208,10 @@ public class GUIEscaleraSerpientes extends JFrame {
 		return ruta;
 	}
 
+	public void lanzarD(int i) {
+		escucha.lanzarDado(i);
+	}
+
 	private ArrayList<ArrayList<Integer>> posicionEscaleras() {
 		// TODO Auto-generated method stub
 
@@ -286,155 +290,144 @@ public class GUIEscaleraSerpientes extends JFrame {
 		return auxPoint;
 	}
 
-	private class Escucha implements ActionListener, Runnable {
-		private Thread x;
+	private class Escucha implements ActionListener {
+		private Thread mover, reiniciarVentana;
+		private Runnable re1;
+
 		private boolean tirar = true;
 
 		@Override
 		public synchronized void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			if (e.getSource() == dado && tirar && !control.isWin()) {
+//				System.out.println("Entre");
 				tirar = false;
-				x = new Thread(this);
-				x.start();
-			} else if (e.getSource() == salir) {
-				System.exit(0);
-			} else if (e.getSource() == reiniciar && x != null) {
-
-				reiniciar.setEnabled(false);
-
-				Thread r1 = new Thread(new Runnable() {
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-
-						// EXTRAER POSICIONES EN PIXELES DE ESCALERAS Y SERPIENTES
-						ArrayList<ArrayList<Integer>> pSerpientes = new ArrayList<>();
-						pSerpientes.addAll(posicionSerpientes());
-
-						ArrayList<ArrayList<Integer>> pEscaleras = new ArrayList<>();
-						pEscaleras.addAll(posicionEscaleras());
-						// ---
-
-						// DIBUJO
-						panelDibujo.setList(pSerpientes, pEscaleras);
-						// JUGADORES
-						panelJugadores.setThread(this);
-						panelJugadores.reiniciar();
-						panelJugadores.setList(pSerpientes, pEscaleras);
-
-						try {
-							synchronized (this) {
-								wait();
-							}
-						} catch (InterruptedException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-
-						if (x.getState() != Thread.State.TERMINATED) {
-							x.interrupt();
-						}
-
-						while (x.getState() != Thread.State.TERMINATED) {
-							try {
-								Thread.sleep(1000);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-
-						// TODO Auto-generated method stub
-						tirar = true;
-						control.reiniciar();
-
-						// AÑADIR AL TABLERO
-
-						tableroVista.clear();
-						panelTablero.removeAll();
-						addTablero();
-
-//		try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-
-						repaint();
-						revalidate();
-
-						tirar = true;
-
-					}
-				});
-				r1.start();
-			}
-		}
-
-		@Override
-		public synchronized void run() {
-			// TODO Auto-generated method stub
-//			while (!control.isWin()) {
-
-			control.setThread(this);
-			control.initNPC();
-
-			for (int i = 0; i < 3; i++) {
-
-				if (i == 0) {
-					try {
-						control.lanzar(1);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-
 				try {
-					this.wait();
-					int movimientos = control.getDado1();
+					control.initNPC();
 
-					dado.setIcon(new ImageIcon("src/imagenes/" + movimientos + ".png"));
-					panelJugadores.setPosition(movimientos, i + 1, this);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				try {
-					this.wait();
-
-					if (i < 2)
-						mensajes.setText("Es el turno de tirar del " + control.getName(i + 2));
-					else
-						mensajes.setText("Es el turno de tirar del " + control.getName(1));
-
-					dado.setIcon(new ImageIcon("src/imagenes/dado.png"));
-
+					control.lanzar(1);
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+			} else if (e.getSource() == salir) {
+				System.exit(0);
+			} else if (e.getSource() == reiniciar && mover != null) {
+				reiniciar.setEnabled(false);
+				reinicio();
+			}
+		}
 
-				if (i < 2) {
+		private void lanzarDado(int jugador) {
+			// TODO Auto-generated method stub
+
+			mover = new Thread(new Runnable() {
+
+				@Override
+				public synchronized void run() {
+
+					System.out.println("Entre 1");
+
+					control.setThread(this);
+
 					try {
-						Thread.sleep(1500);
+						control.lanzarDados();
+
+						this.wait();
+						int movimientos = control.getDado1();
+
+						dado.setIcon(new ImageIcon("src/imagenes/" + movimientos + ".png"));
+						panelJugadores.setPosition(movimientos, jugador, this);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+
+					try {
+						this.wait();
+
+						if (jugador < 3) {
+							mensajes.setText("Es el turno de tirar del " + control.getName(jugador + 1));
+							dado.setIcon(new ImageIcon("src/imagenes/dado.png"));
+
+							try {
+								Thread.sleep(1500);
+							} catch (InterruptedException e1) {
+								e1.printStackTrace();
+							}
+						} else
+							mensajes.setText("Es el turno de tirar del " + control.getName(1));
+
+						dado.setIcon(new ImageIcon("src/imagenes/dado.png"));
+
 					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-				}
-				synchronized (control) {
-					control.notify();
-				}
-			}
 
-			if (!control.isWin()) {
-				tirar = true;
-			}
-			x.interrupt();
+					if (!control.isTerminar()) {
+
+						synchronized (control.getMover()) {
+							control.getMover().notify();
+						}
+
+						if (!control.isWin()) {
+							tirar = true;
+						}
+
+						System.out.println("Termine");
+					} else {
+						synchronized (re1) {
+							re1.notify();
+						}
+					}
+				}
+			});
+
+			mover.start();
+		}
+
+		private void reinicio() {
+			// TODO Auto-generated method stub
+
+			reiniciarVentana = new Thread(new Runnable() {
+
+				@Override
+				public synchronized void run() {
+					// TODO Auto-generated method stub
+
+					re1 = this;
+					control.setTerminar(true, this);
+
+//					control.reiniciar();
+
+					capas.remove(panelDibujo);
+
+					ArrayList<ArrayList<Integer>> pSerpientes = new ArrayList<>();
+					pSerpientes.addAll(posicionSerpientes());
+
+					ArrayList<ArrayList<Integer>> pEscaleras = new ArrayList<>();
+					pEscaleras.addAll(posicionEscaleras());
+					// ---
+
+					// DIBUJO
+					panelDibujo = new DibujoEscalerasSerpientes(pSerpientes, pEscaleras);
+					panelDibujo.setSize(500, 500);
+
+					repaint();
+					revalidate();
+
+//					panelJugadores.reiniciar();
+//
+//					try {
+//						wait();
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+
+				}
+			});
+
+			reiniciarVentana.start();
 		}
 
 	}

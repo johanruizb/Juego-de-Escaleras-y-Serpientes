@@ -2,7 +2,7 @@ package escalerasSerpientes;
 
 import java.util.ArrayList;
 
-public class ControlJuego implements Runnable {
+public class ControlJuego {
 	private Dado dado;
 	private TableroJuego tablero;
 	private Jugador j1;
@@ -11,8 +11,14 @@ public class ControlJuego implements Runnable {
 	private Runnable interfaz;
 	private Thread control;
 	private Thread n2, n3;
+	private boolean terminar = false;
 
-	public ControlJuego() {
+	private Runnable mover, reiniciar;
+
+	private GUIEscaleraSerpientes recurso;
+
+	public ControlJuego(GUIEscaleraSerpientes recurso) {
+		this.recurso = recurso;
 		initControl();
 	}
 
@@ -57,89 +63,129 @@ public class ControlJuego implements Runnable {
 			}
 		}
 
-		this.i = i;
-		control = new Thread(this);
-		control.start();
-	}
-
-	private synchronized int lanzarDados() throws InterruptedException {
-		dado1 = dado.caraDado();
-
-		switch (i) {
-		case 1:
-			if (j1.getPosicion() + dado1 > 100)
-				dado1 = (100 - j1.getPosicion());
-
-			j1.setPosicion(dado1);
-
-			synchronized (interfaz) {
-				interfaz.notify();
-			}
-
-			boolean[] casilla = pisando(j1);
-			if (casilla[0])
-				j1.escalera();
-
-			else if (casilla[1])
-				j1.serpiente();
-
-			this.wait();
-
-			turno++;
-			synchronized (j2) {
-				j2.notify();
-			}
-			break;
-		case 2:
-			System.out.println("Inicia NPC 1");
-			if (j2.getPosicion() + dado1 > 100)
-				dado1 = (100 - j2.getPosicion());
-
-			j2.setPosicion(dado1);
-
-			synchronized (interfaz) {
-				interfaz.notify();
-			}
-
-			boolean[] casilla1 = pisando(j2);
-			if (casilla1[0])
-				j2.escalera();
-			else if (casilla1[1])
-				j2.serpiente();
-
-			this.wait();
-
-			turno++;
-			synchronized (j3) {
-				j3.notify();
-			}
-			break;
-		case 3:
-			System.out.println("Inicia NPC 2");
-			if (j3.getPosicion() + dado1 > 100)
-				dado1 = (100 - j3.getPosicion());
-
-			j3.setPosicion(dado1);
-
-			synchronized (interfaz) {
-				interfaz.notify();
-			}
-
-			boolean[] casilla2 = pisando(j3);
-			if (casilla2[0])
-				j3.escalera();
-			else if (casilla2[1])
-				j3.serpiente();
-
-			this.wait();
-
-			turno = 1;
-			break;
-		default:
-			break;
+		if (!terminar) {
+			this.i = i;
+			recurso.lanzarD(i);
 		}
 
-		return dado1;
+		if ((i == 3 || i == 2) && terminar) {
+			System.out.println("Holo");
+
+			synchronized (reiniciar) {
+				reiniciar.notify();
+			}
+		}
+	}
+
+	public void lanzarDados() throws InterruptedException {
+
+		control = new Thread(new Runnable() {
+
+			@Override
+			public synchronized void run() {
+				// TODO Auto-generated method stub
+				mover = this;
+
+				//
+				dado1 = dado.caraDado();
+
+				switch (i) {
+				case 1:
+
+					if (j1.getPosicion() + dado1 > 100)
+						dado1 = (100 - j1.getPosicion());
+
+					j1.setPosicion(dado1);
+
+					synchronized (interfaz) {
+						interfaz.notify();
+					}
+
+					boolean[] casilla = pisando(j1);
+					if (casilla[0])
+						j1.escalera();
+
+					else if (casilla[1])
+						j1.serpiente();
+
+					try {
+						wait();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					turno++;
+					if (!terminar)
+						synchronized (j2) {
+							j2.notify();
+						}
+					break;
+				case 2:
+					System.out.println("Inicia NPC 1");
+					if (j2.getPosicion() + dado1 > 100)
+						dado1 = (100 - j2.getPosicion());
+
+					j2.setPosicion(dado1);
+
+					synchronized (interfaz) {
+						interfaz.notify();
+					}
+
+					boolean[] casilla1 = pisando(j2);
+					if (casilla1[0])
+						j2.escalera();
+					else if (casilla1[1])
+						j2.serpiente();
+
+					try {
+						wait();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					turno++;
+
+					if (!terminar)
+						synchronized (j3) {
+							j3.notify();
+						}
+					break;
+				case 3:
+					System.out.println("Inicia NPC 2");
+					if (j3.getPosicion() + dado1 > 100)
+						dado1 = (100 - j3.getPosicion());
+
+					j3.setPosicion(dado1);
+
+					synchronized (interfaz) {
+						interfaz.notify();
+					}
+
+					boolean[] casilla2 = pisando(j3);
+					if (casilla2[0])
+						j3.escalera();
+					else if (casilla2[1])
+						j3.serpiente();
+
+					try {
+						wait();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					turno = 1;
+					break;
+				default:
+					break;
+				}
+
+			}
+		});
+
+		control.start();
 	}
 
 	private boolean[] pisando(NPC j) {
@@ -209,22 +255,8 @@ public class ControlJuego implements Runnable {
 	public void reiniciar() {
 		dado = null;
 		tablero = null;
-		j1 = null;
-		j2 = null;
-		j3 = null;
 
 		initControl();
-	}
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		try {
-			lanzarDados();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	// ----------
@@ -248,6 +280,19 @@ public class ControlJuego implements Runnable {
 
 	public int getDado1() {
 		return dado1;
+	}
+
+	public boolean isTerminar() {
+		return terminar;
+	}
+
+	public void setTerminar(boolean terminar, Runnable runnable) {
+		this.terminar = terminar;
+		this.reiniciar = runnable;
+	}
+
+	public Runnable getMover() {
+		return mover;
 	}
 
 }

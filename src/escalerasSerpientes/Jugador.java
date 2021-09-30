@@ -35,4 +35,9 @@ public class Jugador {
 //		System.out.println("Serpiente");
 		posicion -= 18;
 	}
+
+	public void reset() {
+		// TODO Auto-generated method stub
+		posicion = 1;
+	}
 }

@@ -1,6 +1,7 @@
 package escalerasSerpientes;
 
 import java.awt.Graphics;
+import java.lang.Thread.State;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -29,7 +30,7 @@ public class DibujoJugador extends JPanel implements Runnable {
 
 	// Hilos
 	private DibujoJugador dis = this;
-	private Thread prueba;
+	private Thread prueba, x1;
 	private Runnable test1, r1, r2;
 
 	// Banderas
@@ -53,36 +54,22 @@ public class DibujoJugador extends JPanel implements Runnable {
 	}
 
 	public void reiniciar() {
-
-		synchronized (r2) {
-			try {
-				r2.wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
 		terminar = true;
 
-		Thread x1 = new Thread(new Runnable() {
+		x1 = new Thread(new Runnable() {
 
 			@Override
 			public synchronized void run() {
 				// TODO Auto-generated method stub
-
 				r1 = this;
 
-				synchronized (r2) {
-					r2.notify();
-				}
-
-				try {
-					wait();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				while (prueba.getState() != State.TERMINATED)
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 
 				p = null;
 				target = null;
@@ -91,11 +78,13 @@ public class DibujoJugador extends JPanel implements Runnable {
 				target = new int[] { -1, -1 };
 				targetJugador = -1;
 				movimientos = 0;
+
+//				System.out.println("Termine PanelJugador");
+
 			}
 		});
 
 		x1.start();
-
 	}
 
 	public void setPosition(int m, int jugador, Runnable r) {
@@ -177,7 +166,7 @@ public class DibujoJugador extends JPanel implements Runnable {
 		animarCasillas(movimientos);
 	}
 
-	private void animarCasillas(int n) {
+	private synchronized void animarCasillas(int n) {
 
 		boolean tope = false;
 
@@ -214,7 +203,7 @@ public class DibujoJugador extends JPanel implements Runnable {
 				Thread.sleep(ESPERA);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				System.out.println("La espera ha sido interrumpida");
+//				System.out.println("La espera ha sido interrumpida");
 			}
 
 		}
@@ -241,16 +230,11 @@ public class DibujoJugador extends JPanel implements Runnable {
 			}
 		}
 
-		targetJugador = -1;
 		repaint();
-		synchronized (test1) {
-			test1.notifyAll();
-		}
 
-		if (terminar)
-			synchronized (r1) {
-				r1.notify();
-			}
+		synchronized (test1) {
+			test1.notify();
+		}
 
 	}
 
@@ -276,9 +260,18 @@ public class DibujoJugador extends JPanel implements Runnable {
 				Thread.sleep(ESPERA);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				System.out.println("La espera ha sido interrumpida");
+//				System.out.println("La espera ha sido interrumpida");
 			}
 		}
+	}
+
+	public Thread getPrueba() {
+		return prueba;
+	}
+
+	public void setTerminar(boolean b) {
+		// TODO Auto-generated method stub
+		terminar = b;
 	}
 
 }

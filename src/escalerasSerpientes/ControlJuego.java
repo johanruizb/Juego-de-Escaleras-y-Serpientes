@@ -1,5 +1,6 @@
 package escalerasSerpientes;
 
+import java.lang.Thread.State;
 import java.util.ArrayList;
 
 public class ControlJuego {
@@ -46,17 +47,17 @@ public class ControlJuego {
 	}
 
 	public void lanzar(int i) throws InterruptedException {
-		while (i != turno) {
+		if (i != turno) {
 			switch (i) {
 			case 2:
 				synchronized (j2) {
-					System.out.println("Entra NPC 1 a espera");
+//					System.out.println("Entra NPC 1 a espera");
 					j2.wait();
 				}
 				break;
 			case 3:
 				synchronized (j3) {
-					System.out.println("Entra NPC 2 a espera");
+//					System.out.println("Entra NPC 2 a espera");
 					j3.wait();
 				}
 				break;
@@ -66,14 +67,8 @@ public class ControlJuego {
 		if (!terminar) {
 			this.i = i;
 			recurso.lanzarD(i);
-		}
-
-		if ((i == 3 || i == 2) && terminar) {
-			System.out.println("Holo");
-
-			synchronized (reiniciar) {
-				reiniciar.notify();
-			}
+		} else {
+//			System.out.println("Adios");
 		}
 	}
 
@@ -122,7 +117,7 @@ public class ControlJuego {
 						}
 					break;
 				case 2:
-					System.out.println("Inicia NPC 1");
+//					System.out.println("Inicia NPC 1");
 					if (j2.getPosicion() + dado1 > 100)
 						dado1 = (100 - j2.getPosicion());
 
@@ -153,7 +148,7 @@ public class ControlJuego {
 						}
 					break;
 				case 3:
-					System.out.println("Inicia NPC 2");
+//					System.out.println("Inicia NPC 2");
 					if (j3.getPosicion() + dado1 > 100)
 						dado1 = (100 - j3.getPosicion());
 
@@ -245,6 +240,7 @@ public class ControlJuego {
 	}
 
 	public void initNPC() {
+
 		n2 = new Thread(j2);
 		n3 = new Thread(j3);
 
@@ -254,7 +250,14 @@ public class ControlJuego {
 
 	public void reiniciar() {
 		dado = null;
-		tablero = null;
+
+		tablero.reset();
+
+		j1.reset();
+		j2.reset();
+		j3.reset();
+
+		turno = 1;
 
 		initControl();
 	}
@@ -286,13 +289,46 @@ public class ControlJuego {
 		return terminar;
 	}
 
-	public void setTerminar(boolean terminar, Runnable runnable) {
+	public void setTerminar(boolean terminar) {
 		this.terminar = terminar;
-		this.reiniciar = runnable;
+
+		if (n2.getState() != State.TERMINATED) {
+			synchronized (j2) {
+				j2.notify();
+			}
+		}
+		if (n3.getState() != State.TERMINATED) {
+			synchronized (j3) {
+				j3.notify();
+			}
+		}
+
+		synchronized (interfaz) {
+			interfaz.notify();
+		}
 	}
 
 	public Runnable getMover() {
 		return mover;
+	}
+
+	public boolean isTerminado() {
+		// TODO Auto-generated method stub
+
+		while (n3.getState() != State.TERMINATED && n2.getState() != State.TERMINATED
+				&& control.getState() != State.TERMINATED) {
+
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		reiniciar();
+
+		return true;
 	}
 
 }

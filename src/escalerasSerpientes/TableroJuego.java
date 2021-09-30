@@ -19,6 +19,20 @@ public class TableroJuego {
 		initTablero();
 	}
 
+	public void reset() {
+		tablero.clear();
+
+		escaleras.clear();
+		serpientes.clear();
+
+		escaleraSerpiente.reset();
+
+		escaleras.addAll(escaleraSerpiente.getEscaleras());
+		serpientes.addAll(escaleraSerpiente.getSerpientes());
+
+		initTablero();
+	}
+
 	private void initTablero() {
 
 		int m = 100, n = 100;

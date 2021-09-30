@@ -42,13 +42,13 @@ public class MediaPlay implements Runnable {
 
 		time = musica.getTotalDuration();
 
-		System.out.println("Soy duracion = " + time);
+//		System.out.println("Soy duracion = " + time);
 		return time.toSeconds();
 
 	}
 
 	public final MediaPlayer.Status getStatus() {
-		System.out.println("Soy el estado actual " + musica.getStatus());
+//		System.out.println("Soy el estado actual " + musica.getStatus());
 		return musica.getStatus();
 
 	}

@@ -1,22 +1,6 @@
 package escalerasSerpientes;
 
 import java.io.File;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.time.Duration;
-import java.util.Map;
-import java.util.Random;
-
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
-
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
-
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -27,6 +11,7 @@ public class MediaPlay implements Runnable{
 	private String son;
 	private javafx.util.Duration time;
 	private Thread inicia ;
+	private ControlJuego control = new ControlJuego();
 	
 
 	public MediaPlay(String nombre) {
@@ -35,6 +20,7 @@ public class MediaPlay implements Runnable{
 		audio = new Media(new File(ruta).toURI().toString());
 		musica = new MediaPlayer(audio);
         inicia = new Thread(this);
+        
 	}
 
 	public void reproducir() {
@@ -72,9 +58,12 @@ public class MediaPlay implements Runnable{
 
 	@Override
 	public synchronized void run() {
-		// TODO Auto-generated method stub
+		while(control.isWin()==false) {
 		reproducir();
 		inicia.start();
+		}
+	    Thread.interrupted();
+		musica.stop();
 	}
 	
 	

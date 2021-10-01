@@ -12,19 +12,45 @@ import java.util.Random;
 
 import javax.swing.JPanel;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DibujoEscalerasSerpientes.
+ */
 public class DibujoEscalerasSerpientes extends JPanel {
 
 	/**
-	 * 
+	 * clase especializada en el dibujo de los graficos escaleras en el panel.
 	 */
 	private static final long serialVersionUID = 7794229655855274126L;
+
+	/**
+	 * The serpientes coleccion donde se lamacena los datos del dibujo de la
+	 * serpiente.
+	 */
 	private ArrayList<ArrayList<Integer>> serpientes = new ArrayList<ArrayList<Integer>>();
+
+	/**
+	 * The escaleras coleccion donde se almacena los datos del dibujo de las
+	 * escaleras.
+	 */
 	private ArrayList<ArrayList<Integer>> escaleras = new ArrayList<ArrayList<Integer>>();
 
+	/**
+	 * The colores coleccion donde se lamacena los colores utilizados en el
+	 * graficados de de los dibujos generados por la clase y metodos.
+	 */
 	private ArrayList<Color> colores = new ArrayList<>(
 			Arrays.asList(Color.ORANGE, Color.BLUE, Color.CYAN, Color.MAGENTA, Color.GREEN));
+
+	/** The colores ran. */
 	private ArrayList<Color> coloresRan = new ArrayList<>();
 
+	/**
+	 * Instantiates a new dibujo escaleras serpientes.
+	 *
+	 * @param auxPoint  the aux point
+	 * @param auxPoint2 the aux point 2
+	 */
 	public DibujoEscalerasSerpientes(ArrayList<ArrayList<Integer>> auxPoint, ArrayList<ArrayList<Integer>> auxPoint2) {
 		serpientes.addAll(auxPoint);
 		escaleras.addAll(auxPoint2);
@@ -34,6 +60,12 @@ public class DibujoEscalerasSerpientes extends JPanel {
 
 	}
 
+	/**
+	 * Sets the list.
+	 *
+	 * @param auxPoint  the aux point
+	 * @param auxPoint2 the aux point 2
+	 */
 	public void setList(ArrayList<ArrayList<Integer>> auxPoint, ArrayList<ArrayList<Integer>> auxPoint2) {
 		serpientes.clear();
 		escaleras.clear();
@@ -42,6 +74,11 @@ public class DibujoEscalerasSerpientes extends JPanel {
 		escaleras.addAll(auxPoint2);
 	}
 
+	/**
+	 * Paint component.
+	 *
+	 * @param g the g
+	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
@@ -49,6 +86,11 @@ public class DibujoEscalerasSerpientes extends JPanel {
 		dibujarSerpientes(g);
 	}
 
+	/**
+	 * Dibujar escaleras.
+	 *Este metodo se encarga del graficado de las escaleras
+	 * @param g the g
+	 */
 	private void dibujarEscaleras(Graphics g) {
 		// TODO Auto-generated method stub
 		for (int i = 0; escaleras.size() > 0 && (i < escaleras.size()); i++) {
@@ -107,6 +149,11 @@ public class DibujoEscalerasSerpientes extends JPanel {
 
 	}
 
+	/**
+	 * Dibujar serpientes.
+	 *Metodo encargado del dibujo de las serpientes
+	 * @param g the g
+	 */
 	private void dibujarSerpientes(Graphics g) {
 		// TODO Auto-generated method stub
 		Random random1 = new Random();
@@ -117,7 +164,6 @@ public class DibujoEscalerasSerpientes extends JPanel {
 					colores.get(random1.nextInt(colores.size())), colores.get(random1.nextInt(colores.size()))));
 		}
 
-//		System.out.println("Size " + serpientes.size());
 
 		for (int i = serpientes.size() - 1; serpientes.size() > 0 && (i >= 0); i--) {
 

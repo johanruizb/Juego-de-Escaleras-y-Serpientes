@@ -3,26 +3,60 @@ package escalerasSerpientes;
 import java.lang.Thread.State;
 import java.util.ArrayList;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ControlJuego.
+ */
 public class ControlJuego {
+
+	/** The dado referencia a la clase dado. */
 	private Dado dado;
+
+	/** The tablero referencia a la clase tablero. */
 	private TableroJuego tablero;
+
+	/** The j 1. */
 	private Jugador j1;
+
+	/** The j 3. */
 	private NPC j2, j3;
+
+	/** The i. */
 	private int turno = 1, dado1, i;
+
+	/** The interfaz. */
 	private Runnable interfaz;
+
+	/** The control. */
 	private Thread control;
+
+	/** The n 3. */
 	private Thread n2, n3;
+
+	/** The terminar. */
 	private boolean terminar = false;
 
+	/** The reiniciar. */
 	private Runnable mover, reiniciar;
 
+	/** The recurso referencia a la clase encargada de la vista del juego. */
 	private GUIEscaleraSerpientes recurso;
 
+	/**
+	 * Instantiates a new control juego. Contructor de la clase encargado de lanzar
+	 * los controles de la lagica del juego
+	 * 
+	 * @param recurso the recurso
+	 */
 	public ControlJuego(GUIEscaleraSerpientes recurso) {
 		this.recurso = recurso;
 		initControl();
 	}
 
+	/**
+	 * Inits the control. Metodo encargado de crear las instancias del los objectos
+	 * que interactuan en el juego
+	 */
 	private void initControl() {
 		// TODO Auto-generated method stub
 		dado = new Dado();
@@ -33,6 +67,13 @@ public class ControlJuego {
 		j3 = new NPC("NPC 2", 3, this);
 	}
 
+	/**
+	 * Gets the name. Metodo especializado en cacturar los nombres de los jugadores
+	 * que integran el juego
+	 * 
+	 * @param i the i argumento interno del metotodo
+	 * @return the name debuelve el nombre del jugador
+	 */
 	public String getName(int i) {
 		switch (i) {
 		case 1:
@@ -46,18 +87,25 @@ public class ControlJuego {
 		}
 	}
 
+	/**
+	 * Lanzar. Metodo especializado en controlar el turno de lanzamiento del dado
+	 * entre los NPC
+	 * 
+	 * @param i the i argumento interno del metodo
+	 * @throws InterruptedException the interrupted exception
+	 */
 	public void lanzar(int i) throws InterruptedException {
 		if (i != turno) {
 			switch (i) {
 			case 2:
 				synchronized (j2) {
-//					System.out.println("Entra NPC 1 a espera");
+
 					j2.wait();
 				}
 				break;
 			case 3:
 				synchronized (j3) {
-//					System.out.println("Entra NPC 2 a espera");
+
 					j3.wait();
 				}
 				break;
@@ -68,17 +116,23 @@ public class ControlJuego {
 			this.i = i;
 			recurso.lanzarD(i);
 		} else {
-//			System.out.println("Adios");
+
 		}
 	}
 
+	/**
+	 * Lanzar dados. Lanzar. Metodo especializado en controlar el turno de
+	 * lanzamiento del dado del jugador humano
+	 * 
+	 * @throws InterruptedException the interrupted exception
+	 */
 	public void lanzarDados() throws InterruptedException {
 
 		control = new Thread(new Runnable() {
 
 			@Override
 			public synchronized void run() {
-				// TODO Auto-generated method stub
+
 				mover = this;
 
 				//
@@ -106,7 +160,7 @@ public class ControlJuego {
 					try {
 						wait();
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
+
 						e.printStackTrace();
 					}
 
@@ -117,7 +171,7 @@ public class ControlJuego {
 						}
 					break;
 				case 2:
-//					System.out.println("Inicia NPC 1");
+
 					if (j2.getPosicion() + dado1 > 100)
 						dado1 = (100 - j2.getPosicion());
 
@@ -136,7 +190,7 @@ public class ControlJuego {
 					try {
 						wait();
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
+
 						e.printStackTrace();
 					}
 
@@ -148,7 +202,7 @@ public class ControlJuego {
 						}
 					break;
 				case 3:
-//					System.out.println("Inicia NPC 2");
+
 					if (j3.getPosicion() + dado1 > 100)
 						dado1 = (100 - j3.getPosicion());
 
@@ -167,7 +221,7 @@ public class ControlJuego {
 					try {
 						wait();
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
+
 						e.printStackTrace();
 					}
 
@@ -183,6 +237,12 @@ public class ControlJuego {
 		control.start();
 	}
 
+	/**
+	 * Pisando.
+	 *
+	 * @param j the j
+	 * @return the boolean[]
+	 */
 	private boolean[] pisando(NPC j) {
 		// TODO Auto-generated method stub
 		boolean escalera = false;
@@ -204,8 +264,13 @@ public class ControlJuego {
 		return new boolean[] { escalera, serpiente };
 	}
 
+	/**
+	 * Pisando.
+	 *
+	 * @param j the j
+	 * @return the boolean[]
+	 */
 	private boolean[] pisando(Jugador j) {
-		// TODO Auto-generated method stub
 
 		boolean escalera = false;
 		boolean serpiente = false;
@@ -226,6 +291,11 @@ public class ControlJuego {
 		return new boolean[] { escalera, serpiente };
 	}
 
+	/**
+	 * Checks if is win. Metodo encargado de determinar si ahy un ganador del juego
+	 * 
+	 * @return true, if is win
+	 */
 	public boolean isWin() {
 
 		if (j1.getPosicion() == 100) {
@@ -239,6 +309,10 @@ public class ControlJuego {
 		return false;
 	}
 
+	/**
+	 * Inits the NPC. este metodo es el encargado de crear las intancias de los
+	 * hilos para los NPC y realizar su iniciacion
+	 */
 	public void initNPC() {
 
 		n2 = new Thread(j2);
@@ -248,6 +322,10 @@ public class ControlJuego {
 		n3.start();
 	}
 
+	/**
+	 * Reiniciar. Metodo especializado en reiniciar los jugadores NPC y jugador
+	 * humano
+	 */
 	public void reiniciar() {
 		dado = null;
 
@@ -264,31 +342,67 @@ public class ControlJuego {
 
 	// ----------
 
+	/**
+	 * Gets the tablero.
+	 *
+	 * @return the tablero
+	 */
 	public ArrayList<ArrayList<Integer>> getTablero() {
 		return tablero.getTablero();
 	}
 
+	/**
+	 * Gets the serpientes.
+	 *
+	 * @return the serpientes
+	 */
 	public ArrayList<ArrayList<Integer>> getSerpientes() {
 		return tablero.getSerpientes();
 	}
 
+	/**
+	 * Gets the escaleras.
+	 *
+	 * @return the escaleras
+	 */
 	public ArrayList<ArrayList<Integer>> getEscaleras() {
 		return tablero.getEscaleras();
 	}
 
+	/**
+	 * Sets the thread.
+	 *
+	 * @param r the new thread
+	 */
 	public void setThread(Runnable r) {
 		// TODO Auto-generated method stub
 		interfaz = r;
 	}
 
+	/**
+	 * Gets the dado 1.
+	 *
+	 * @return the dado 1
+	 */
 	public int getDado1() {
 		return dado1;
 	}
 
+	/**
+	 * Checks if is terminar.
+	 *
+	 * @return true, if is terminar
+	 */
 	public boolean isTerminar() {
 		return terminar;
 	}
 
+	/**
+	 * Sets the terminar. Metodo encargado de verificar si los NPC alcanzaron el
+	 * final del juego
+	 * 
+	 * @param terminar the new terminar
+	 */
 	public void setTerminar(boolean terminar) {
 		this.terminar = terminar;
 
@@ -308,12 +422,22 @@ public class ControlJuego {
 		}
 	}
 
+	/**
+	 * Gets the mover.
+	 *
+	 * @return the mover
+	 */
 	public Runnable getMover() {
 		return mover;
 	}
 
+	/**
+	 * Checks if is terminado. Metodo encargado de verificar si el juego se ha
+	 * terminado
+	 * 
+	 * @return true, if is terminado
+	 */
 	public boolean isTerminado() {
-		// TODO Auto-generated method stub
 
 		while (n3.getState() != State.TERMINATED && n2.getState() != State.TERMINATED
 				&& control.getState() != State.TERMINATED) {
@@ -321,7 +445,7 @@ public class ControlJuego {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
 		}

@@ -48,7 +48,11 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 		// TODO Auto-generated method stub
 		initGUI();
+
     	play.reproducir();
+
+		play.reproducir();
+
 		this.setTitle("Esacaleras y Serpientes");
 		this.setVisible(true);
 		this.setSize(650, 450);
@@ -393,8 +397,11 @@ public class GUIEscaleraSerpientes extends JFrame {
 				public synchronized void run() {
 					// TODO Auto-generated method stub
 
-					remove(capas);
-					remove(componentes);
+//					remove(capas);
+//					remove(componentes);
+
+					capas.setVisible(false);
+					componentes.setVisible(false);
 
 					add(cargando, BorderLayout.CENTER);
 
@@ -436,8 +443,11 @@ public class GUIEscaleraSerpientes extends JFrame {
 						Thread.sleep(1500);
 						remove(cargando);
 
-						add(capas, BorderLayout.CENTER);
-						add(componentes, BorderLayout.EAST);
+//						add(capas, BorderLayout.CENTER);
+//						add(componentes, BorderLayout.EAST);
+
+						capas.setVisible(true);
+						componentes.setVisible(true);
 
 						repaint();
 						revalidate();

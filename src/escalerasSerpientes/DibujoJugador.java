@@ -16,7 +16,7 @@ public class DibujoJugador extends JPanel implements Runnable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -1333670092518533289L;
-	
+
 	/** The espera. */
 	public static int ESPERA = 17;
 
@@ -24,42 +24,42 @@ public class DibujoJugador extends JPanel implements Runnable {
 	// Juego
 	private ImageIcon[] j = new ImageIcon[] { new ImageIcon("src/imagenes/j1.png"),
 			new ImageIcon("src/imagenes/npc.png"), new ImageIcon("src/imagenes/npc.png") };
-	
+
 	/** The p. */
 	private int[][] p = new int[][] { { 8, 368 }, { 8, 368 }, { 8, 368 } };
 
 	/** The target. */
 	private int[] target = new int[] { -1, -1 };
-	
+
 	/** The movimientos. */
-	private int targetJugador = -1, movimientos = 0;
+	private volatile int targetJugador = -1, movimientos = 0;
 
 	/** The limites. */
 	// Tableros
 	private ArrayList<Integer> limites = new ArrayList<>(Arrays.asList(368, 288, 208, 128, 48));
-	
+
 	/** The limites 2. */
 	private ArrayList<Integer> limites2 = new ArrayList<>(Arrays.asList(368, 328, 288, 248, 208, 168, 128, 88, 48, 8));
 
 	/** The serpientes. */
 	private ArrayList<ArrayList<Integer>> serpientes = new ArrayList<ArrayList<Integer>>();
-	
+
 	/** The escaleras. */
 	private ArrayList<ArrayList<Integer>> escaleras = new ArrayList<ArrayList<Integer>>();
 
 	/** The dis. */
 	// Hilos
 	private DibujoJugador dis = this;
-	
+
 	/** The x 1. */
-	private Thread prueba, x1;
-	
+	private Thread animacion, x1;
+
 	/** The r 2. */
-	private Runnable test1, r1, r2;
+	private Runnable interfaz;
 
 	/** The terminar. */
 	// Banderas
-	private boolean terminar = false;
+	private volatile boolean terminar = false;
 
 	/**
 	 * Instantiates a new dibujo jugador.
@@ -77,21 +77,23 @@ public class DibujoJugador extends JPanel implements Runnable {
 	}
 
 	/**
-	 * Sets the list.
+	 * Sets the list. Actuliza las listas que contienen la informacion de las
+	 * serpientes y escaleras
 	 *
-	 * @param auxPoint the aux point
-	 * @param auxPoint2 the aux point 2
+	 * @param s la posicion de las serpientes en pixeles
+	 * @param e la posicion de las escaleras en pixeles
 	 */
-	public void setList(ArrayList<ArrayList<Integer>> auxPoint, ArrayList<ArrayList<Integer>> auxPoint2) {
+	public void setList(ArrayList<ArrayList<Integer>> s, ArrayList<ArrayList<Integer>> e) {
 		serpientes.clear();
 		escaleras.clear();
 
-		serpientes.addAll(auxPoint);
-		escaleras.addAll(auxPoint2);
+		serpientes.addAll(s);
+		escaleras.addAll(e);
 	}
 
 	/**
-	 * Reiniciar.
+	 * Reiniciar. Metodo encargado del reinicio de la posicion visual de los
+	 * jugadores
 	 */
 	public void reiniciar() {
 		terminar = true;
@@ -100,16 +102,20 @@ public class DibujoJugador extends JPanel implements Runnable {
 
 			@Override
 			public synchronized void run() {
-				// TODO Auto-generated method stub
-				r1 = this;
 
-				while (prueba.getState() != State.TERMINATED)
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+				if (animacion != null) {
+					synchronized (animacion) {
+						animacion.notify();
 					}
+
+					while (animacion.getState() != State.TERMINATED)
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				}
 
 				p = null;
 				target = null;
@@ -118,44 +124,32 @@ public class DibujoJugador extends JPanel implements Runnable {
 				target = new int[] { -1, -1 };
 				targetJugador = -1;
 				movimientos = 0;
-
-//				System.out.println("Termine PanelJugador");
-
 			}
-		});
+		}, "Reiniciar panel jugador");
 
 		x1.start();
 	}
 
 	/**
-	 * Sets the position.
+	 * Sets the position. Asigna que jugador se movera visualmente, crea un hilo
+	 * necesario y lo inicia.
 	 *
-	 * @param m the m
-	 * @param jugador the jugador
-	 * @param r the r
+	 * @param m       the movimientos (1-6)
+	 * @param jugador el turno o id del jugador
+	 * @param r       the r
 	 */
 	public void setPosition(int m, int jugador, Runnable r) {
-
 		targetJugador = jugador - 1;
 
 		movimientos = m;
-		test1 = r;
+		interfaz = r;
 
-		prueba = new Thread(dis);
-		prueba.start();
+		animacion = new Thread(dis, "Mover jugador");
+		animacion.start();
 	}
 
 	/**
-	 * Sets the thread.
-	 *
-	 * @param r the new thread
-	 */
-	public void setThread(Runnable r) {
-		test1 = r;
-	}
-
-	/**
-	 * Paint component.
+	 * Paint component. Pinta los jugadores
 	 *
 	 * @param g the g
 	 */
@@ -220,18 +214,20 @@ public class DibujoJugador extends JPanel implements Runnable {
 	 */
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-		r2 = this;
-
-		animarCasillas(movimientos);
+		try {
+			animarCasillas(movimientos);
+		} catch (ArrayIndexOutOfBoundsException e) {
+		}
 	}
 
 	/**
-	 * Animar casillas.
+	 * Animar casillas. Anima el movimiento de los jugadores entre casillas. Al
+	 * final notifica a la interfaz por que ella estara esperando a que se termine
+	 * de mover al jugador para continuar su ejecucion
 	 *
-	 * @param n the n
+	 * @param n la cantidad de movimientos que se deben hacer (1-6)
 	 */
-	private synchronized void animarCasillas(int n) {
+	private synchronized void animarCasillas(int n) throws ArrayIndexOutOfBoundsException {
 
 		boolean tope = false;
 
@@ -268,7 +264,7 @@ public class DibujoJugador extends JPanel implements Runnable {
 				Thread.sleep(ESPERA);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-//				System.out.println("La espera ha sido interrumpida");
+				System.out.println("La espera ha sido interrumpida");
 			}
 
 		}
@@ -279,7 +275,10 @@ public class DibujoJugador extends JPanel implements Runnable {
 				target[0] = list1.get(2);
 				target[1] = list1.get(3);
 
-				animarObjetos();
+				try {
+					animarObjetos();
+				} catch (ArrayIndexOutOfBoundsException e) {
+				}
 				break;
 			}
 		}
@@ -290,23 +289,31 @@ public class DibujoJugador extends JPanel implements Runnable {
 				target[0] = list1.get(2);
 				target[1] = list1.get(3);
 
-				animarObjetos();
+				try {
+					animarObjetos();
+				} catch (ArrayIndexOutOfBoundsException e) {
+				}
 				break;
 			}
 		}
 
+		targetJugador = -1;
 		repaint();
 
-		synchronized (test1) {
-			test1.notify();
+		synchronized (interfaz) {
+			interfaz.notify();
 		}
 
 	}
 
 	/**
-	 * Animar objetos.
+	 * Animar objetos. Anima el movimiento de las escaleras y serpientes por las que
+	 * tenga que subir o bajar el jugador
 	 */
-	private void animarObjetos() {
+	private void animarObjetos() throws ArrayIndexOutOfBoundsException {
+
+		System.out.println("X " + target[0]);
+		System.out.println("Y " + target[1]);
 
 		while (!(p[targetJugador][0] == target[0] && p[targetJugador][1] == target[1])) {
 
@@ -328,28 +335,19 @@ public class DibujoJugador extends JPanel implements Runnable {
 				Thread.sleep(ESPERA);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-//				System.out.println("La espera ha sido interrumpida");
+				System.out.println("La espera ha sido interrumpida");
 			}
 		}
 	}
 
 	/**
-	 * Gets the prueba.
+	 * Gets the animacion. Retorna una referencia al hilo de animacion para
+	 * comprobar su estado en otros lugares.
 	 *
-	 * @return the prueba
+	 * @return the animacion
 	 */
-	public Thread getPrueba() {
-		return prueba;
-	}
-
-	/**
-	 * Sets the terminar.
-	 *
-	 * @param b the new terminar
-	 */
-	public void setTerminar(boolean b) {
-		// TODO Auto-generated method stub
-		terminar = b;
+	public Thread getAnimacion() {
+		return animacion;
 	}
 
 }

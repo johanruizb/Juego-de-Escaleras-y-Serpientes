@@ -24,32 +24,61 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GUIEscaleraSerpientes.
+ */
 public class GUIEscaleraSerpientes extends JFrame {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -142202431892957518L;
 
+	/** The panel dibujo. */
 	private DibujoEscalerasSerpientes panelDibujo;
+
+	/** The panel jugadores. */
 	private DibujoJugador panelJugadores;
+
+	/** The botones. */
 	private JPanel panelTablero, componentes, botones;
+
+	/** The cargando. */
 	private JLabel mensajes, cargando;
+
+	/** The tablero vista. */
 	private ArrayList<JLabel> tableroVista;
+
+	/** The escucha. */
 	private Escucha escucha;
+
+	/** The escuchaplay. */
 	private EscuchaPlay escuchaplay;
+
+	/** The boton reiniciar. */
 	private JButton dado, reproducir, salir, botonReiniciar;
+
+	/** The capas. */
 	private JLayeredPane capas = new JLayeredPane();
 
+	/** The control. */
 	private ControlJuego control;
 
+	/** The play. */
 	private MediaPlay play;
+
+	/** The ruta. */
 	private String ruta;
+
+	/** The contador. */
 	private static int contador = 1;
 
+	/**
+	 * Instantiates a new GUI escalera serpientes.
+	 */
 	public GUIEscaleraSerpientes() {
 
 		// TODO Auto-generated method stub
 		initGUI();
-
-    	play.reproducir();
 
 		play.reproducir();
 
@@ -61,6 +90,9 @@ public class GUIEscaleraSerpientes extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
+	/**
+	 * Inits the GUI. Inicializa los componentes de la ventana y los añade.
+	 */
 	private void initGUI() {
 
 		escucha = new Escucha();
@@ -182,6 +214,9 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 	}
 
+	/**
+	 * Adds the tablero. Añade las casillas al panel del tablero, se añaden 1 por 1.
+	 */
 	private void addTablero() {
 		// TODO Auto-generated method stub
 		ArrayList<ArrayList<Integer>> tablero = control.getTablero();
@@ -204,22 +239,44 @@ public class GUIEscaleraSerpientes extends JFrame {
 		}
 	}
 
+	/**
+	 * Inits the scene. Inicia la escena. Necesaria para reproducir la musica.
+	 *
+	 * @return the scene
+	 */
 	private static Scene initScene() {
 		Group root = new Group();
 		Scene scene = new Scene(root, javafx.scene.paint.Color.ALICEBLUE);
 		return scene;
 	}
 
+	/**
+	 * Aleatorio. Devuelve un numero aleatorio para la musica
+	 *
+	 * @return the string
+	 */
 	public String aleatorio() {
 		Random ran = new Random();
 		ruta = String.valueOf(ran.nextInt(10) + 1);
 		return ruta;
 	}
 
+	/**
+	 * Lanzar D. Un metodo que se usa en el control para poder lanzar el dado y
+	 * verse el movimiento de las fichas
+	 *
+	 * @param i the i
+	 */
 	public void lanzarD(int i) {
 		escucha.lanzarDado(i);
 	}
 
+	/**
+	 * Posicion escaleras. Extrae la posicion de las escaleras en pixeles para luego
+	 * ser pintadas con Graphics
+	 *
+	 * @return the array list
+	 */
 	private ArrayList<ArrayList<Integer>> posicionEscaleras() {
 		// TODO Auto-generated method stub
 
@@ -259,6 +316,12 @@ public class GUIEscaleraSerpientes extends JFrame {
 		return auxPoint2;
 	}
 
+	/**
+	 * Posicion serpientes.Extrae la posicion de las serpientes en pixeles para
+	 * luego ser pintadas con Graphics
+	 *
+	 * @return the array list
+	 */
 	private ArrayList<ArrayList<Integer>> posicionSerpientes() {
 		// TODO Auto-generated method stub
 
@@ -298,19 +361,35 @@ public class GUIEscaleraSerpientes extends JFrame {
 		return auxPoint;
 	}
 
+	/**
+	 * The Class Escucha. Clase que controla los eventos de los botones
+	 */
 	private class Escucha implements ActionListener {
+
+		/** The reiniciar ventana. */
 		private Thread mover, reiniciarVentana;
+
+		/** The tirar. */
 		private boolean tirar = true;
 
+		/**
+		 * Action performed.
+		 * 
+		 * Lamza el dado del jugador y luego sincroniza el movimiento de su personaje.
+		 *
+		 * Si se quiere reiniciar lanza el Thread encargado del reinicio
+		 *
+		 * @param e the e
+		 */
 		@Override
 		public synchronized void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			if (e.getSource() == dado && tirar && !control.isWin()) {
 				tirar = false;
-
+				botonReiniciar.setEnabled(false);
 				try {
 					control.initNPC();
-					control.lanzar(1);
+					control.lanzar();
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -318,13 +397,18 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 			} else if (e.getSource() == salir) {
 				System.exit(0);
-			} else if (e.getSource() == botonReiniciar && mover != null) {
+			} else if (e.getSource() == botonReiniciar) {
 				botonReiniciar.setEnabled(false);
 				reinicio();
-				
+
 			}
 		}
 
+		/**
+		 * Lanzar dado. Lanza el dado del jugador o de los NPCs dependiendo de su turno
+		 *
+		 * @param jugador the jugador
+		 */
 		private void lanzarDado(int jugador) {
 			// TODO Auto-generated method stub
 
@@ -332,7 +416,6 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 				@Override
 				public synchronized void run() {
-//					System.out.println("Inicia movimiento de " + control.getName(jugador));
 
 					control.setThread(this);
 
@@ -359,7 +442,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 							try {
 								Thread.sleep(1500);
 							} catch (InterruptedException e1) {
-//								System.out.println("Espera interrumpida");
+								System.out.println("Espera interrumpida");
 							}
 						} else
 							mensajes.setText("Es el turno de tirar del " + control.getName(1));
@@ -376,18 +459,22 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 					if (!control.isWin() && jugador == 3) {
 						tirar = true;
+						botonReiniciar.setEnabled(true);
 					} else if (control.isWin()) {
 						JOptionPane.showMessageDialog(null, "Ha ganado el " + control.getName(jugador));
 						dado.setEnabled(false);
 					}
 
-//					System.out.println("Termine de mover con " + control.getName(jugador));
 				}
 			});
 
 			mover.start();
 		}
 
+		/**
+		 * Reinicio. Metodo encargado de crear e iniciar el Thread para reiniciar el
+		 * juego.
+		 */
 		private void reinicio() {
 			// TODO Auto-generated method stub
 
@@ -397,9 +484,6 @@ public class GUIEscaleraSerpientes extends JFrame {
 				public synchronized void run() {
 					// TODO Auto-generated method stub
 
-//					remove(capas);
-//					remove(componentes);
-
 					capas.setVisible(false);
 					componentes.setVisible(false);
 
@@ -407,12 +491,6 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 					repaint();
 					revalidate();
-
-					control.setTerminar(true);
-
-					esperarHilos();
-
-					panelJugadores.reiniciar();
 
 					mensajes.setText("Es el turno de tirar del " + control.getName(1));
 					dado.setIcon(new ImageIcon("src/imagenes/dado.png"));
@@ -422,11 +500,10 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 					tirar = true;
 
-					control.setTerminar(false);
-					panelJugadores.setTerminar(false);
+					control.reiniciar();
+					panelJugadores.reiniciar();
 
 					dado.setEnabled(true);
-					botonReiniciar.setEnabled(true);
 
 					// EXTRAER POSICIONES EN PIXELES DE ESCALERAS Y SERPIENTES
 					ArrayList<ArrayList<Integer>> pSerpientes = new ArrayList<>();
@@ -443,11 +520,9 @@ public class GUIEscaleraSerpientes extends JFrame {
 						Thread.sleep(1500);
 						remove(cargando);
 
-//						add(capas, BorderLayout.CENTER);
-//						add(componentes, BorderLayout.EAST);
-
 						capas.setVisible(true);
 						componentes.setVisible(true);
+						botonReiniciar.setEnabled(true);
 
 						repaint();
 						revalidate();
@@ -458,27 +533,6 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 				}
 
-				private void esperarHilos() {
-					// TODO Auto-generated method stub
-					control.isTerminado();
-
-					while (mover.getState() != State.TERMINATED)
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
-					while (panelJugadores.getPrueba().getState() != State.TERMINATED)
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-				}
-
 			});
 
 			reiniciarVentana.start();
@@ -486,24 +540,31 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 	}
 
+	/**
+	 * The Class EscuchaPlay. Clase encargada de la reproduccion de la musica
+	 */
 //CLASE PARA EL MANEJO DE LA REPRODUCCION DE LA MUSICA
 	private class EscuchaPlay implements ActionListener {
 
+		/**
+		 * Action performed.
+		 *
+		 * @param e the e
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == reproducir) {
-				contador++;
-				play.reproducir();
+				if (contador == 1) {
+					contador++;
+					reproducir.setIcon(new ImageIcon("src/imagenes/off.png"));
+					play.pausar();
+				} else if (contador == 2) {
+					contador = 1;
+					reproducir.setIcon(new ImageIcon("src/imagenes/on.png"));
+					play.reproducir();
+				}
 			}
-			if (contador == 2) {
-				reproducir.setIcon(new ImageIcon("src/imagenes/off.png"));
-				play.pausar();
-			}
-			if (contador == 3) {
-				contador = 1;
-				reproducir.setIcon(new ImageIcon("src/imagenes/on.png"));
-				play.reproducir();
-			}
+
 		}
 
 	}

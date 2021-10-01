@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class ControlJuego.
+ * The Class ControlJuego. Clase que se encarga del control logico del juego.
  */
 public class ControlJuego {
 
@@ -22,7 +22,7 @@ public class ControlJuego {
 	private NPC j2, j3;
 
 	/** The i. */
-	private int turno = 1, dado1, i;
+	private volatile int turno = 1, dado1;
 
 	/** The interfaz. */
 	private Runnable interfaz;
@@ -34,10 +34,10 @@ public class ControlJuego {
 	private Thread n2, n3;
 
 	/** The terminar. */
-	private boolean terminar = false;
+	private volatile boolean terminar = false;
 
 	/** The reiniciar. */
-	private Runnable mover, reiniciar;
+	private Runnable mover;
 
 	/** The recurso referencia a la clase encargada de la vista del juego. */
 	private GUIEscaleraSerpientes recurso;
@@ -90,22 +90,22 @@ public class ControlJuego {
 	/**
 	 * Lanzar. Metodo especializado en controlar el turno de lanzamiento del dado
 	 * entre los NPC
-	 * 
-	 * @param i the i argumento interno del metodo
+	 *
+	 * @param i el turno del NPC que ejecuta el metodo
+	 * @param r the r
 	 * @throws InterruptedException the interrupted exception
 	 */
-	public void lanzar(int i) throws InterruptedException {
+	public void lanzar(int i, Runnable r) throws InterruptedException {
 		if (i != turno) {
+
 			switch (i) {
 			case 2:
 				synchronized (j2) {
-
 					j2.wait();
 				}
 				break;
 			case 3:
 				synchronized (j3) {
-
 					j3.wait();
 				}
 				break;
@@ -113,16 +113,27 @@ public class ControlJuego {
 		}
 
 		if (!terminar) {
-			this.i = i;
-			recurso.lanzarD(i);
+			turno = i;
+			recurso.lanzarD(turno);
 		} else {
+			turno = 1;
+		}
+	}
 
+	/**
+	 * Lanzar. Metodo que usa el jugador para lanzar los dados y moverse
+	 *
+	 * @throws InterruptedException the interrupted exception
+	 */
+	public void lanzar() throws InterruptedException {
+		if (!terminar) {
+			recurso.lanzarD(1);
 		}
 	}
 
 	/**
 	 * Lanzar dados. Lanzar. Metodo especializado en controlar el turno de
-	 * lanzamiento del dado del jugador humano
+	 * lanzamiento del dado del jugador humano y los no jugadores
 	 * 
 	 * @throws InterruptedException the interrupted exception
 	 */
@@ -132,13 +143,12 @@ public class ControlJuego {
 
 			@Override
 			public synchronized void run() {
-
 				mover = this;
+//				dado1 = dado.caraDado();
+				dado1 = 60;
 
-				//
-				dado1 = dado.caraDado();
+				switch (turno) {
 
-				switch (i) {
 				case 1:
 
 					if (j1.getPosicion() + dado1 > 100)
@@ -156,11 +166,11 @@ public class ControlJuego {
 
 					else if (casilla[1])
 						j1.serpiente();
+					System.out.println("J1 " + j1.getPosicion());
 
 					try {
 						wait();
 					} catch (InterruptedException e) {
-
 						e.printStackTrace();
 					}
 
@@ -170,6 +180,7 @@ public class ControlJuego {
 							j2.notify();
 						}
 					break;
+
 				case 2:
 
 					if (j2.getPosicion() + dado1 > 100)
@@ -186,6 +197,7 @@ public class ControlJuego {
 						j2.escalera();
 					else if (casilla1[1])
 						j2.serpiente();
+					System.out.println("J2 " + j2.getPosicion());
 
 					try {
 						wait();
@@ -201,6 +213,7 @@ public class ControlJuego {
 							j3.notify();
 						}
 					break;
+
 				case 3:
 
 					if (j3.getPosicion() + dado1 > 100)
@@ -218,6 +231,8 @@ public class ControlJuego {
 					else if (casilla2[1])
 						j3.serpiente();
 
+					System.out.println("J3 " + j3.getPosicion());
+
 					try {
 						wait();
 					} catch (InterruptedException e) {
@@ -232,13 +247,13 @@ public class ControlJuego {
 				}
 
 			}
-		});
+		}, "Mover control");
 
 		control.start();
 	}
 
 	/**
-	 * Pisando.
+	 * Pisando. Comprueba si el NPC "j" esta pisando una serpiente o una escalera.
 	 *
 	 * @param j the j
 	 * @return the boolean[]
@@ -265,7 +280,8 @@ public class ControlJuego {
 	}
 
 	/**
-	 * Pisando.
+	 * Pisando. Comprueba si el Jugador "j" esta pisando una serpiente o una
+	 * escalera.
 	 *
 	 * @param j the j
 	 * @return the boolean[]
@@ -292,7 +308,7 @@ public class ControlJuego {
 	}
 
 	/**
-	 * Checks if is win. Metodo encargado de determinar si ahy un ganador del juego
+	 * Checks if is win. Metodo encargado de determinar si hay un ganador del juego
 	 * 
 	 * @return true, if is win
 	 */
@@ -310,34 +326,36 @@ public class ControlJuego {
 	}
 
 	/**
-	 * Inits the NPC. este metodo es el encargado de crear las intancias de los
-	 * hilos para los NPC y realizar su iniciacion
+	 * Inits the NPC. Este metodo es el encargado de crear las intancias de los
+	 * hilos para los NPC y realizar su iniciacion.
 	 */
 	public void initNPC() {
+		turno = 1;
 
-		n2 = new Thread(j2);
-		n3 = new Thread(j3);
+		n2 = null;
+		n3 = null;
+
+		n2 = new Thread(j2, "N2");
+		n3 = new Thread(j3, "N3");
 
 		n2.start();
 		n3.start();
+
+		turno = 1;
 	}
 
 	/**
 	 * Reiniciar. Metodo especializado en reiniciar los jugadores NPC y jugador
-	 * humano
+	 * humano y ademas crear un nuevo tablero de juego.
 	 */
 	public void reiniciar() {
-		dado = null;
+		turno = 1;
 
 		tablero.reset();
 
 		j1.reset();
 		j2.reset();
 		j3.reset();
-
-		turno = 1;
-
-		initControl();
 	}
 
 	// ----------
@@ -370,7 +388,8 @@ public class ControlJuego {
 	}
 
 	/**
-	 * Sets the thread.
+	 * Sets the thread. Asigna una referencia al hilo del movimiento en la interfaz
+	 * para comunicarse con él.
 	 *
 	 * @param r the new thread
 	 */
@@ -398,28 +417,13 @@ public class ControlJuego {
 	}
 
 	/**
-	 * Sets the terminar. Metodo encargado de verificar si los NPC alcanzaron el
-	 * final del juego
+	 * Sets the terminar. Metodo usado para bajar la bandera de terminacion de los
+	 * hilos.
 	 * 
 	 * @param terminar the new terminar
 	 */
 	public void setTerminar(boolean terminar) {
 		this.terminar = terminar;
-
-		if (n2.getState() != State.TERMINATED) {
-			synchronized (j2) {
-				j2.notify();
-			}
-		}
-		if (n3.getState() != State.TERMINATED) {
-			synchronized (j3) {
-				j3.notify();
-			}
-		}
-
-		synchronized (interfaz) {
-			interfaz.notify();
-		}
 	}
 
 	/**
@@ -430,29 +434,4 @@ public class ControlJuego {
 	public Runnable getMover() {
 		return mover;
 	}
-
-	/**
-	 * Checks if is terminado. Metodo encargado de verificar si el juego se ha
-	 * terminado
-	 * 
-	 * @return true, if is terminado
-	 */
-	public boolean isTerminado() {
-
-		while (n3.getState() != State.TERMINATED && n2.getState() != State.TERMINATED
-				&& control.getState() != State.TERMINATED) {
-
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-
-				e.printStackTrace();
-			}
-		}
-
-		reiniciar();
-
-		return true;
-	}
-
 }

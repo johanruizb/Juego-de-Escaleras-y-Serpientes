@@ -5,7 +5,6 @@ public class NPC implements Runnable {
 	private int posicion = 1, turno = 0;
 	private String nombre = null;
 	private ControlJuego recurso;
-	private Runnable ref;
 
 	public NPC(String s, int i, ControlJuego r) {
 		nombre = s;
@@ -28,7 +27,7 @@ public class NPC implements Runnable {
 	@Override
 	public void run() {
 		try {
-			recurso.lanzar(turno);
+			recurso.lanzar(turno, this);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -46,10 +45,6 @@ public class NPC implements Runnable {
 	public void setPosicion(int posicion) {
 		if (posicion < 7 && posicion > 0)
 			this.posicion += posicion;
-	}
-
-	public Runnable getRef() {
-		return ref;
 	}
 
 	public void reset() {

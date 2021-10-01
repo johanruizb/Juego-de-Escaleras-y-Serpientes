@@ -18,7 +18,7 @@ public class Jugador {
 	}
 
 	public void setPosicion(int posicion) {
-		if (posicion >= 1 && posicion <= 6)
+//		if (posicion >= 1 && posicion <= 6)
 			this.posicion += posicion;
 	}
 

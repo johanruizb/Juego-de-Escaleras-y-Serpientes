@@ -8,6 +8,7 @@ import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Random;
 
 import javax.swing.JPanel;
@@ -23,8 +24,10 @@ public class DibujoEscalerasSerpientes extends JPanel {
 	 */
 	private static final long serialVersionUID = 7794229655855274126L;
 
+	private static final Collection<? extends ArrayList<Integer>> e = null;
+
 	/**
-	 * The serpientes coleccion donde se lamacena los datos del dibujo de la
+	 * The serpientes coleccion donde se almacena los datos del dibujo de la
 	 * serpiente.
 	 */
 	private ArrayList<ArrayList<Integer>> serpientes = new ArrayList<ArrayList<Integer>>();
@@ -48,12 +51,12 @@ public class DibujoEscalerasSerpientes extends JPanel {
 	/**
 	 * Instantiates a new dibujo escaleras serpientes.
 	 *
-	 * @param auxPoint  the aux point
-	 * @param auxPoint2 the aux point 2
+	 * @param s la posicion de las serpientes en pixeles
+	 * @param e la posicion de las escaleras en pixeles
 	 */
-	public DibujoEscalerasSerpientes(ArrayList<ArrayList<Integer>> auxPoint, ArrayList<ArrayList<Integer>> auxPoint2) {
-		serpientes.addAll(auxPoint);
-		escaleras.addAll(auxPoint2);
+	public DibujoEscalerasSerpientes(ArrayList<ArrayList<Integer>> s, ArrayList<ArrayList<Integer>> e) {
+		serpientes.addAll(s);
+		escaleras.addAll(e);
 		this.setOpaque(false);
 
 		this.setBounds(18, 6, 400, 400);
@@ -61,17 +64,18 @@ public class DibujoEscalerasSerpientes extends JPanel {
 	}
 
 	/**
-	 * Sets the list.
+	 * Sets the list. Actuliza las listas que contienen la informacion de las
+	 * serpientes y escaleras
 	 *
-	 * @param auxPoint  the aux point
-	 * @param auxPoint2 the aux point 2
+	 * @param s la posicion de las serpientes en pixeles
+	 * @param e la posicion de las escaleras en pixeles
 	 */
-	public void setList(ArrayList<ArrayList<Integer>> auxPoint, ArrayList<ArrayList<Integer>> auxPoint2) {
+	public void setList(ArrayList<ArrayList<Integer>> s, ArrayList<ArrayList<Integer>> e) {
 		serpientes.clear();
 		escaleras.clear();
 
-		serpientes.addAll(auxPoint);
-		escaleras.addAll(auxPoint2);
+		serpientes.addAll(s);
+		escaleras.addAll(e);
 	}
 
 	/**
@@ -87,8 +91,8 @@ public class DibujoEscalerasSerpientes extends JPanel {
 	}
 
 	/**
-	 * Dibujar escaleras.
-	 *Este metodo se encarga del graficado de las escaleras
+	 * Dibujar escaleras. Este metodo se encarga del graficado de las escaleras
+	 * 
 	 * @param g the g
 	 */
 	private void dibujarEscaleras(Graphics g) {
@@ -150,8 +154,8 @@ public class DibujoEscalerasSerpientes extends JPanel {
 	}
 
 	/**
-	 * Dibujar serpientes.
-	 *Metodo encargado del dibujo de las serpientes
+	 * Dibujar serpientes. Metodo encargado del dibujo de las serpientes
+	 * 
 	 * @param g the g
 	 */
 	private void dibujarSerpientes(Graphics g) {
@@ -163,7 +167,6 @@ public class DibujoEscalerasSerpientes extends JPanel {
 					colores.get(random1.nextInt(colores.size())), colores.get(random1.nextInt(colores.size())),
 					colores.get(random1.nextInt(colores.size())), colores.get(random1.nextInt(colores.size()))));
 		}
-
 
 		for (int i = serpientes.size() - 1; serpientes.size() > 0 && (i >= 0); i--) {
 

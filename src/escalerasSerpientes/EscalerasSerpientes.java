@@ -14,6 +14,14 @@ public class EscalerasSerpientes {
 		initSerpientes();
 	}
 
+	public void reset() {
+		escaleras.clear();
+		serpientes.clear();
+
+		initEscaleras();
+		initSerpientes();
+	}
+
 	private void initEscaleras() {
 		// TODO Auto-generated method stub
 		Random temp = new Random();

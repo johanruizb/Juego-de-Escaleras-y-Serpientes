@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.Thread.State;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -15,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import javafx.application.Platform;
@@ -25,18 +27,19 @@ import javafx.scene.Scene;
 public class GUIEscaleraSerpientes extends JFrame {
 
 	private static final long serialVersionUID = -142202431892957518L;
+
 	private DibujoEscalerasSerpientes panelDibujo;
 	private DibujoJugador panelJugadores;
 	private JPanel panelTablero, componentes, botones;
-	private JLabel mensajes = new JLabel();
-	private ArrayList<JLabel> tableroVista = new ArrayList<JLabel>(100);
+	private JLabel mensajes, cargando;
+	private ArrayList<JLabel> tableroVista;
 	private Escucha escucha;
 	private EscuchaPlay escuchaplay;
-	private JButton dado, reproducir, salir, reiniciar;
+	private JButton dado, reproducir, salir, botonReiniciar;
+	private JLayeredPane capas = new JLayeredPane();
 
 	private ControlJuego control;
 
-	// private TableroJuego control;
 	private MediaPlay play;
 	private String ruta;
 	private static int contador = 1;
@@ -45,7 +48,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 		// TODO Auto-generated method stub
 		initGUI();
-		play.reproducir();
+    	play.reproducir();
 		this.setTitle("Esacaleras y Serpientes");
 		this.setVisible(true);
 		this.setSize(650, 450);
@@ -58,10 +61,12 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 		escucha = new Escucha();
 		escuchaplay = new EscuchaPlay();
-		control = new ControlJuego();
+		control = new ControlJuego(this);
 
-		JLayeredPane capas = new JLayeredPane();
 		capas.setSize(500, 500);
+
+		// Pre-carga pantalla de carga
+		cargando = new JLabel("Cargando... ", new ImageIcon("src/imagenes/cargando.gif"), JLabel.CENTER);
 
 		// TABLERO GUI
 		componentes = new JPanel(new BorderLayout());
@@ -69,27 +74,10 @@ public class GUIEscaleraSerpientes extends JFrame {
 		panelTablero.setOpaque(false);
 		panelTablero.setBounds(18, 6, 400, 400);
 
-		ArrayList<ArrayList<Integer>> tablero = control.getTablero();
-		int k = 0;
-
 		// AÑADIR AL TABLERO
 
-		for (int i = 0; i < 10; i++) {
-
-			for (int j = 0; j < 10; j++) {
-
-				JLabel temp = new JLabel();
-				temp.setText(String.valueOf(tablero.get(i).get(j)));
-				temp.setPreferredSize(new Dimension(20, 20));
-				temp.setVerticalAlignment(JLabel.CENTER);
-				temp.setHorizontalAlignment(JLabel.CENTER);
-				temp.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-
-				tableroVista.add(temp);
-				panelTablero.add(tableroVista.get(k));
-				k++;
-			}
-		}
+		tableroVista = new ArrayList<JLabel>(100);
+		addTablero();
 
 		// EXTRAER POSICIONES EN PIXELES DE ESCALERAS Y SERPIENTES
 		ArrayList<ArrayList<Integer>> pSerpientes = new ArrayList<>();
@@ -131,10 +119,10 @@ public class GUIEscaleraSerpientes extends JFrame {
 		salir.setContentAreaFilled(false);
 
 		// REINICIAR
-		reiniciar = new JButton(new ImageIcon("src/imagenes/reiniciar.png"));
-		reiniciar.addActionListener(escucha);
-		reiniciar.setBorder(null);
-		reiniciar.setContentAreaFilled(false);
+		botonReiniciar = new JButton(new ImageIcon("src/imagenes/reiniciar.png"));
+		botonReiniciar.addActionListener(escucha);
+		botonReiniciar.setBorder(null);
+		botonReiniciar.setContentAreaFilled(false);
 
 		// REPRODUCTOR
 		JFXPanel panelsonido = new JFXPanel();
@@ -143,14 +131,12 @@ public class GUIEscaleraSerpientes extends JFrame {
 		play = new MediaPlay(aleatorio());
 
 		Platform.runLater(new Runnable() {
-
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
 				Scene scene = initScene();
 				panelsonido.setScene(scene);
 			}
-
 		});
 
 		// BORON DE REPRODUCCION
@@ -166,7 +152,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 		JLabel l1 = new JLabel();
 		l1.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
 		botones.add(l1);
-		botones.add(reiniciar);
+		botones.add(botonReiniciar);
 
 		l1 = new JLabel();
 		l1.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
@@ -175,6 +161,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 		// MENSAJES
 		JPanel mensajePanel = new JPanel();
+		mensajes = new JLabel();
 		mensajes.setText("Es el turno de tirar del Jugador");
 		mensajes.setBorder(BorderFactory.createEmptyBorder(250, 0, 0, 0));
 
@@ -187,9 +174,30 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 		// AÑADIR COMPONENTES A LA VENTANA
 		add(capas, BorderLayout.CENTER);
-		// add(dado, BorderLayout.EAST);
 		add(componentes, BorderLayout.EAST);
 
+	}
+
+	private void addTablero() {
+		// TODO Auto-generated method stub
+		ArrayList<ArrayList<Integer>> tablero = control.getTablero();
+		int k = 0;
+		for (int i = 0; i < 10; i++) {
+
+			for (int j = 0; j < 10; j++) {
+
+				JLabel temp = new JLabel();
+				temp.setText(String.valueOf(tablero.get(i).get(j)));
+				temp.setPreferredSize(new Dimension(20, 20));
+				temp.setVerticalAlignment(JLabel.CENTER);
+				temp.setHorizontalAlignment(JLabel.CENTER);
+				temp.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+
+				tableroVista.add(temp);
+				panelTablero.add(tableroVista.get(k));
+				k++;
+			}
+		}
 	}
 
 	private static Scene initScene() {
@@ -204,12 +212,16 @@ public class GUIEscaleraSerpientes extends JFrame {
 		return ruta;
 	}
 
+	public void lanzarD(int i) {
+		escucha.lanzarDado(i);
+	}
+
 	private ArrayList<ArrayList<Integer>> posicionEscaleras() {
 		// TODO Auto-generated method stub
 
 		ArrayList<ArrayList<Integer>> tablero = control.getTablero();
-
 		ArrayList<ArrayList<Integer>> escaleras = new ArrayList<ArrayList<Integer>>();
+
 		ArrayList<ArrayList<Integer>> auxPoint2 = new ArrayList<>();
 
 		escaleras.addAll(control.getEscaleras());
@@ -247,8 +259,8 @@ public class GUIEscaleraSerpientes extends JFrame {
 		// TODO Auto-generated method stub
 
 		ArrayList<ArrayList<Integer>> tablero = control.getTablero();
-
 		ArrayList<ArrayList<Integer>> serpientes = new ArrayList<ArrayList<Integer>>();
+
 		ArrayList<ArrayList<Integer>> auxPoint = new ArrayList<>();
 
 		serpientes.addAll(control.getSerpientes());
@@ -282,69 +294,184 @@ public class GUIEscaleraSerpientes extends JFrame {
 		return auxPoint;
 	}
 
-	private class Escucha implements ActionListener, Runnable {
-		private Thread x;
-
+	private class Escucha implements ActionListener {
+		private Thread mover, reiniciarVentana;
 		private boolean tirar = true;
 
 		@Override
 		public synchronized void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-			if (e.getSource() == dado && tirar) {
+			if (e.getSource() == dado && tirar && !control.isWin()) {
 				tirar = false;
-				x = new Thread(this);
-				x.start();
-			} else if (e.getSource() == salir) {
-				System.exit(0);
-			} else if (e.getSource() == reiniciar) {
-
-			}
-		}
-
-		@Override
-		public synchronized void run() {
-			// TODO Auto-generated method stub
-//			while (!control.isWin()) {
-
-			for (int i = 0; i < 3; i++) {
-
-				int movimientos = control.lanzarDados(i + 1);
-				dado.setIcon(new ImageIcon("src/imagenes/" + movimientos + ".png"));
-
-				panelJugadores.setPosition(movimientos, i + 1, this);
 
 				try {
-					this.wait();
+					control.initNPC();
+					control.lanzar(1);
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 
-				if (i < 2) {
-					mensajes.setText("Es el turno de tirar del " + control.getNanme(i + 2));
+			} else if (e.getSource() == salir) {
+				System.exit(0);
+			} else if (e.getSource() == botonReiniciar && mover != null) {
+				botonReiniciar.setEnabled(false);
+				reinicio();
+				
+			}
+		}
 
-				} else {
-					mensajes.setText("Es el turno de tirar del " + control.getNanme(1));
-				}
+		private void lanzarDado(int jugador) {
+			// TODO Auto-generated method stub
 
-				dado.setIcon(new ImageIcon("src/imagenes/dado.png"));
+			mover = new Thread(new Runnable() {
 
-				if (i < 2) {
+				@Override
+				public synchronized void run() {
+//					System.out.println("Inicia movimiento de " + control.getName(jugador));
+
+					control.setThread(this);
+
 					try {
-						Thread.sleep(1500);
+						control.lanzarDados();
+
+						this.wait();
+						int movimientos = control.getDado1();
+
+						dado.setIcon(new ImageIcon("src/imagenes/" + movimientos + ".png"));
+
+						panelJugadores.setPosition(movimientos, jugador, this);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+
+					try {
+						this.wait();
+
+						if (jugador < 3) {
+							mensajes.setText("Es el turno de tirar del " + control.getName(jugador + 1));
+							dado.setIcon(new ImageIcon("src/imagenes/dado.png"));
+
+							try {
+								Thread.sleep(1500);
+							} catch (InterruptedException e1) {
+//								System.out.println("Espera interrumpida");
+							}
+						} else
+							mensajes.setText("Es el turno de tirar del " + control.getName(1));
+
+						dado.setIcon(new ImageIcon("src/imagenes/dado.png"));
+
 					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+
+					synchronized (control.getMover()) {
+						control.getMover().notify();
+					}
+
+					if (!control.isWin() && jugador == 3) {
+						tirar = true;
+					} else if (control.isWin()) {
+						JOptionPane.showMessageDialog(null, "Ha ganado el " + control.getName(jugador));
+						dado.setEnabled(false);
+					}
+
+//					System.out.println("Termine de mover con " + control.getName(jugador));
 				}
-			}
+			});
 
-			if (!control.isWin()) {
-				tirar = true;
-				x.interrupt();
-			} else {
+			mover.start();
+		}
 
-			}
+		private void reinicio() {
+			// TODO Auto-generated method stub
+
+			reiniciarVentana = new Thread(new Runnable() {
+
+				@Override
+				public synchronized void run() {
+					// TODO Auto-generated method stub
+
+					remove(capas);
+					remove(componentes);
+
+					add(cargando, BorderLayout.CENTER);
+
+					repaint();
+					revalidate();
+
+					control.setTerminar(true);
+
+					esperarHilos();
+
+					panelJugadores.reiniciar();
+
+					mensajes.setText("Es el turno de tirar del " + control.getName(1));
+					dado.setIcon(new ImageIcon("src/imagenes/dado.png"));
+
+					repaint();
+					revalidate();
+
+					tirar = true;
+
+					control.setTerminar(false);
+					panelJugadores.setTerminar(false);
+
+					dado.setEnabled(true);
+					botonReiniciar.setEnabled(true);
+
+					// EXTRAER POSICIONES EN PIXELES DE ESCALERAS Y SERPIENTES
+					ArrayList<ArrayList<Integer>> pSerpientes = new ArrayList<>();
+					pSerpientes.addAll(posicionSerpientes());
+
+					ArrayList<ArrayList<Integer>> pEscaleras = new ArrayList<>();
+					pEscaleras.addAll(posicionEscaleras());
+					// ---
+
+					panelDibujo.setList(pSerpientes, pEscaleras);
+					panelJugadores.setList(pSerpientes, pEscaleras);
+
+					try {
+						Thread.sleep(1500);
+						remove(cargando);
+
+						add(capas, BorderLayout.CENTER);
+						add(componentes, BorderLayout.EAST);
+
+						repaint();
+						revalidate();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+
+				private void esperarHilos() {
+					// TODO Auto-generated method stub
+					control.isTerminado();
+
+					while (mover.getState() != State.TERMINATED)
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+					while (panelJugadores.getPrueba().getState() != State.TERMINATED)
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				}
+
+			});
+
+			reiniciarVentana.start();
 		}
 
 	}
@@ -355,23 +482,14 @@ public class GUIEscaleraSerpientes extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == reproducir) {
-
 				contador++;
-			
 				play.reproducir();
-
-
 			}
-
 			if (contador == 2) {
-
 				reproducir.setIcon(new ImageIcon("src/imagenes/off.png"));
 				play.pausar();
-
 			}
-
 			if (contador == 3) {
-
 				contador = 1;
 				reproducir.setIcon(new ImageIcon("src/imagenes/on.png"));
 				play.reproducir();

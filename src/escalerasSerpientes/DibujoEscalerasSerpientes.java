@@ -34,6 +34,14 @@ public class DibujoEscalerasSerpientes extends JPanel {
 
 	}
 
+	public void setList(ArrayList<ArrayList<Integer>> auxPoint, ArrayList<ArrayList<Integer>> auxPoint2) {
+		serpientes.clear();
+		escaleras.clear();
+
+		serpientes.addAll(auxPoint);
+		escaleras.addAll(auxPoint2);
+	}
+
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 

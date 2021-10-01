@@ -1,32 +1,41 @@
 package escalerasSerpientes;
 
 import java.io.File;
+
+
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 // Clase en construccion para el reproductor de audio mp3
-public class MediaPlay implements Runnable{
+public class MediaPlay implements Runnable {
 	private Media audio;
 	private MediaPlayer musica;
 	private String son;
 	private javafx.util.Duration time;
+
 	private Thread inicia ;
-	private ControlJuego control = new ControlJuego();
+	private ControlJuego control = new ControlJuego(null);
 	
+
+	//private Thread inicia;
+
 
 	public MediaPlay(String nombre) {
 		this.son = nombre;
 		String ruta = "src/sonidos/" + son + ".mp3";
 		audio = new Media(new File(ruta).toURI().toString());
 		musica = new MediaPlayer(audio);
+
         inicia = new Thread(this);
         
+
+		inicia = new Thread(this);
+
 	}
 
 	public void reproducir() {
 
 		musica.setCycleCount(MediaPlayer.INDEFINITE);
-	
 		musica.play();
 
 	}
@@ -45,13 +54,13 @@ public class MediaPlay implements Runnable{
 
 		time = musica.getTotalDuration();
 
-		System.out.println("Soy duracion = " + time);
+//		System.out.println("Soy duracion = " + time);
 		return time.toSeconds();
 
 	}
 
 	public final MediaPlayer.Status getStatus() {
-		System.out.println("Soy el estado actual " + musica.getStatus());
+//		System.out.println("Soy el estado actual " + musica.getStatus());
 		return musica.getStatus();
 
 	}
@@ -65,6 +74,5 @@ public class MediaPlay implements Runnable{
 	    Thread.interrupted();
 		musica.stop();
 	}
-	
-	
+
 }

@@ -27,17 +27,14 @@ public class ControlJuego {
 	/** The interfaz. */
 	private Runnable interfaz;
 
+	/** The mover. */
+	private Runnable mover;
+
 	/** The control. */
 	private Thread control;
 
 	/** The n 3. */
 	private Thread n2, n3;
-
-	/** The terminar. */
-	private volatile boolean terminar = false;
-
-	/** The reiniciar. */
-	private Runnable mover;
 
 	/** The recurso referencia a la clase encargada de la vista del juego. */
 	private GUIEscaleraSerpientes recurso;
@@ -112,12 +109,9 @@ public class ControlJuego {
 			}
 		}
 
-		if (!terminar) {
-			turno = i;
-			recurso.lanzarD(turno);
-		} else {
-			turno = 1;
-		}
+		turno = i;
+		recurso.lanzarD(turno);
+
 	}
 
 	/**
@@ -126,9 +120,7 @@ public class ControlJuego {
 	 * @throws InterruptedException the interrupted exception
 	 */
 	public void lanzar() throws InterruptedException {
-		if (!terminar) {
-			recurso.lanzarD(1);
-		}
+		recurso.lanzarD(1);
 	}
 
 	/**
@@ -173,10 +165,10 @@ public class ControlJuego {
 					}
 
 					turno++;
-					if (!terminar)
-						synchronized (j2) {
-							j2.notify();
-						}
+
+					synchronized (j2) {
+						j2.notify();
+					}
 					break;
 
 				case 2:
@@ -205,10 +197,9 @@ public class ControlJuego {
 
 					turno++;
 
-					if (!terminar)
-						synchronized (j3) {
-							j3.notify();
-						}
+					synchronized (j3) {
+						j3.notify();
+					}
 					break;
 
 				case 3:
@@ -396,15 +387,6 @@ public class ControlJuego {
 	 */
 	public int getDado1() {
 		return dado1;
-	}
-
-	/**
-	 * Checks if is terminar.
-	 *
-	 * @return true, if is terminar
-	 */
-	public boolean isTerminar() {
-		return terminar;
 	}
 
 	/**

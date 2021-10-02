@@ -6,7 +6,7 @@ import java.util.Random;
 /**
  * The Class Dado. Clase dado se encarga de generar un numero aleatorio de 1 a 6
  * para las caras del dado
- * 
+ *
  * /*
  */
 public class Dado {

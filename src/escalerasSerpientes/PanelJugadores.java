@@ -10,9 +10,10 @@ import javax.swing.JPanel;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class DibujoJugador.
+ * The Class DibujoJugador. Clase que se encarga de dibujar y mover a los
+ * personajes
  */
-public class DibujoJugador extends JPanel implements Runnable {
+public class PanelJugadores extends JPanel implements Runnable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -1333670092518533289L;
@@ -42,24 +43,18 @@ public class DibujoJugador extends JPanel implements Runnable {
 	private ArrayList<Integer> limites2 = new ArrayList<>(Arrays.asList(368, 328, 288, 248, 208, 168, 128, 88, 48, 8));
 
 	/** The serpientes. */
-	private ArrayList<ArrayList<Integer>> serpientes = new ArrayList<ArrayList<Integer>>();
+	private ArrayList<ArrayList<Integer>> serpientes = new ArrayList<>();
 
 	/** The escaleras. */
-	private ArrayList<ArrayList<Integer>> escaleras = new ArrayList<ArrayList<Integer>>();
+	private ArrayList<ArrayList<Integer>> escaleras = new ArrayList<>();
 
 	/** The dis. */
-	// Hilos
-	private DibujoJugador dis = this;
 
 	/** The x 1. */
-	private Thread animacion, x1;
+	private Thread animacion, reinicio;
 
-	/** The r 2. */
+	/** The interfaz. */
 	private Runnable interfaz;
-
-	/** The terminar. */
-	// Banderas
-	private volatile boolean terminar = false;
 
 	/**
 	 * Instantiates a new dibujo jugador.
@@ -67,7 +62,7 @@ public class DibujoJugador extends JPanel implements Runnable {
 	 * @param s the s
 	 * @param e the e
 	 */
-	public DibujoJugador(ArrayList<ArrayList<Integer>> s, ArrayList<ArrayList<Integer>> e) {
+	public PanelJugadores(ArrayList<ArrayList<Integer>> s, ArrayList<ArrayList<Integer>> e) {
 		// TODO Auto-generated constructor stub
 		serpientes.addAll(s);
 		escaleras.addAll(e);
@@ -96,9 +91,7 @@ public class DibujoJugador extends JPanel implements Runnable {
 	 * jugadores
 	 */
 	public void reiniciar() {
-		terminar = true;
-
-		x1 = new Thread(new Runnable() {
+		reinicio = new Thread(new Runnable() {
 
 			@Override
 			public synchronized void run() {
@@ -108,13 +101,15 @@ public class DibujoJugador extends JPanel implements Runnable {
 						animacion.notify();
 					}
 
-					while (animacion.getState() != State.TERMINATED)
+					while (animacion.getState() != State.TERMINATED) {
+						System.out.println("Terminando..");
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
+					}
 				}
 
 				p = null;
@@ -127,7 +122,7 @@ public class DibujoJugador extends JPanel implements Runnable {
 			}
 		}, "Reiniciar panel jugador");
 
-		x1.start();
+		reinicio.start();
 	}
 
 	/**
@@ -144,7 +139,7 @@ public class DibujoJugador extends JPanel implements Runnable {
 		movimientos = m;
 		interfaz = r;
 
-		animacion = new Thread(dis, "Mover jugador");
+		animacion = new Thread(this, "Mover jugador");
 		animacion.start();
 	}
 
@@ -153,6 +148,7 @@ public class DibujoJugador extends JPanel implements Runnable {
 	 *
 	 * @param g the g
 	 */
+	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
@@ -226,6 +222,8 @@ public class DibujoJugador extends JPanel implements Runnable {
 	 * de mover al jugador para continuar su ejecucion
 	 *
 	 * @param n la cantidad de movimientos que se deben hacer (1-6)
+	 * @throws ArrayIndexOutOfBoundsException the array index out of bounds
+	 *                                        exception
 	 */
 	private synchronized void animarCasillas(int n) throws ArrayIndexOutOfBoundsException {
 
@@ -234,7 +232,7 @@ public class DibujoJugador extends JPanel implements Runnable {
 		int altura = p[targetJugador][1];
 		int mov = 0;
 
-		while (!(mov == n) && !terminar) {
+		while (!(mov == n)) {
 
 			if (limites.contains(p[targetJugador][1]) && p[targetJugador][0] < 368) {
 				p[targetJugador][0]++;
@@ -309,6 +307,9 @@ public class DibujoJugador extends JPanel implements Runnable {
 	/**
 	 * Animar objetos. Anima el movimiento de las escaleras y serpientes por las que
 	 * tenga que subir o bajar el jugador
+	 *
+	 * @throws ArrayIndexOutOfBoundsException the array index out of bounds
+	 *                                        exception
 	 */
 	private void animarObjetos() throws ArrayIndexOutOfBoundsException {
 
@@ -339,15 +340,4 @@ public class DibujoJugador extends JPanel implements Runnable {
 			}
 		}
 	}
-
-	/**
-	 * Gets the animacion. Retorna una referencia al hilo de animacion para
-	 * comprobar su estado en otros lugares.
-	 *
-	 * @return the animacion
-	 */
-	public Thread getAnimacion() {
-		return animacion;
-	}
-
 }

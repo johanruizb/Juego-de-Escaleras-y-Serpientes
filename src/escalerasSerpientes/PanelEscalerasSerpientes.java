@@ -8,35 +8,30 @@ import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Random;
 
 import javax.swing.JPanel;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class DibujoEscalerasSerpientes.
+ * The Class DibujoEscalerasSerpientes. Clase especializada en el dibujo de los
+ * graficos escaleras y serpientes en el panel.
  */
-public class DibujoEscalerasSerpientes extends JPanel {
+public class PanelEscalerasSerpientes extends JPanel {
 
-	/**
-	 * clase especializada en el dibujo de los graficos escaleras en el panel.
-	 */
 	private static final long serialVersionUID = 7794229655855274126L;
-
-	private static final Collection<? extends ArrayList<Integer>> e = null;
 
 	/**
 	 * The serpientes coleccion donde se almacena los datos del dibujo de la
 	 * serpiente.
 	 */
-	private ArrayList<ArrayList<Integer>> serpientes = new ArrayList<ArrayList<Integer>>();
+	private ArrayList<ArrayList<Integer>> serpientes = new ArrayList<>();
 
 	/**
 	 * The escaleras coleccion donde se almacena los datos del dibujo de las
 	 * escaleras.
 	 */
-	private ArrayList<ArrayList<Integer>> escaleras = new ArrayList<ArrayList<Integer>>();
+	private ArrayList<ArrayList<Integer>> escaleras = new ArrayList<>();
 
 	/**
 	 * The colores coleccion donde se lamacena los colores utilizados en el
@@ -54,7 +49,7 @@ public class DibujoEscalerasSerpientes extends JPanel {
 	 * @param s la posicion de las serpientes en pixeles
 	 * @param e la posicion de las escaleras en pixeles
 	 */
-	public DibujoEscalerasSerpientes(ArrayList<ArrayList<Integer>> s, ArrayList<ArrayList<Integer>> e) {
+	public PanelEscalerasSerpientes(ArrayList<ArrayList<Integer>> s, ArrayList<ArrayList<Integer>> e) {
 		serpientes.addAll(s);
 		escaleras.addAll(e);
 		this.setOpaque(false);
@@ -83,6 +78,7 @@ public class DibujoEscalerasSerpientes extends JPanel {
 	 *
 	 * @param g the g
 	 */
+	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
@@ -92,12 +88,12 @@ public class DibujoEscalerasSerpientes extends JPanel {
 
 	/**
 	 * Dibujar escaleras. Este metodo se encarga del graficado de las escaleras
-	 * 
+	 *
 	 * @param g the g
 	 */
 	private void dibujarEscaleras(Graphics g) {
 		// TODO Auto-generated method stub
-		for (int i = 0; escaleras.size() > 0 && (i < escaleras.size()); i++) {
+		for (int i = 0; escaleras.size() > 0 && i < escaleras.size(); i++) {
 
 			// BASES
 
@@ -108,7 +104,7 @@ public class DibujoEscalerasSerpientes extends JPanel {
 			int y1Copy = y1Inicio, y2Copy = y2Inicio;
 
 			// DISTANCIA
-			double d1 = Math.sqrt(Math.pow((x1Inicio - x1Fin), 2) + Math.pow((y1Inicio - y1Fin), 2));
+			double d1 = Math.sqrt(Math.pow(x1Inicio - x1Fin, 2) + Math.pow(y1Inicio - y1Fin, 2));
 
 			// ESPACIO ENTRE ESCALONES
 			int espacioEscalones;
@@ -123,19 +119,19 @@ public class DibujoEscalerasSerpientes extends JPanel {
 			// ESCALONES
 
 			// CALCULOS PARA LOS ESCALONES
-			double a1 = (y1Inicio - y1Fin), a2 = (x1Fin - x1Inicio), m1 = a1 / a2;
-			double b1 = (y2Inicio - y2Fin), b2 = (x2Fin - x2Inicio), m2 = b1 / b2;
-			double n1 = y1Inicio - (m1 * x1Inicio);
-			double n2 = y2Inicio - (m2 * x2Inicio);
+			double a1 = y1Inicio - y1Fin, a2 = x1Fin - x1Inicio, m1 = a1 / a2;
+			double b1 = y2Inicio - y2Fin, b2 = x2Fin - x2Inicio, m2 = b1 / b2;
+			double n1 = y1Inicio - m1 * x1Inicio;
+			double n2 = y2Inicio - m2 * x2Inicio;
 
 			// PINTAR ESCALONES
-			for (int j = 0; j < (espacioEscalones); j++) {
+			for (int j = 0; j < espacioEscalones; j++) {
 
 				y1Copy -= 8;
 				y2Copy -= 8;
 
-				double isX1 = (((y1Copy) - n1) / m1);
-				double isX2 = (((y2Copy) - n2) / m2);
+				double isX1 = (y1Copy - n1) / m1;
+				double isX2 = (y2Copy - n2) / m2;
 
 				y1Inicio += 8;
 				y2Inicio += 8;
@@ -155,7 +151,7 @@ public class DibujoEscalerasSerpientes extends JPanel {
 
 	/**
 	 * Dibujar serpientes. Metodo encargado del dibujo de las serpientes
-	 * 
+	 *
 	 * @param g the g
 	 */
 	private void dibujarSerpientes(Graphics g) {
@@ -168,13 +164,13 @@ public class DibujoEscalerasSerpientes extends JPanel {
 					colores.get(random1.nextInt(colores.size())), colores.get(random1.nextInt(colores.size()))));
 		}
 
-		for (int i = serpientes.size() - 1; serpientes.size() > 0 && (i >= 0); i--) {
+		for (int i = serpientes.size() - 1; serpientes.size() > 0 && i >= 0; i--) {
 
 			// COORDENADAS
 			int xInicio = serpientes.get(i).get(0), yInicio = serpientes.get(i).get(1) + 20;
 			int xFin = serpientes.get(i).get(2) + 8, yFin = serpientes.get(i).get(3) + 20;
 
-			boolean derecha = (xInicio > xFin);
+			boolean derecha = xInicio > xFin;
 
 			// SERPIENTE
 

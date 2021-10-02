@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package escalerasSerpientes;
 
@@ -28,7 +28,7 @@ public class MediaPlay {
 	/**
 	 * Instantiates a new media play. Constructor de la clase encargado de
 	 * inicializar los objectos y cargar los recursos para la reproduccion
-	 * 
+	 *
 	 * @param nombre the nombre
 	 */
 	public MediaPlay(String nombre) {

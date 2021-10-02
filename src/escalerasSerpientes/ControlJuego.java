@@ -45,7 +45,7 @@ public class ControlJuego {
 	/**
 	 * Instantiates a new control juego. Contructor de la clase encargado de lanzar
 	 * los controles de la lagica del juego
-	 * 
+	 *
 	 * @param recurso the recurso
 	 */
 	public ControlJuego(GUIEscaleraSerpientes recurso) {
@@ -70,7 +70,7 @@ public class ControlJuego {
 	/**
 	 * Gets the name. Metodo especializado en cacturar los nombres de los jugadores
 	 * que integran el juego
-	 * 
+	 *
 	 * @param i the i argumento interno del metotodo
 	 * @return the name debuelve el nombre del jugador
 	 */
@@ -134,7 +134,7 @@ public class ControlJuego {
 	/**
 	 * Lanzar dados. Lanzar. Metodo especializado en controlar el turno de
 	 * lanzamiento del dado del jugador humano y los no jugadores
-	 * 
+	 *
 	 * @throws InterruptedException the interrupted exception
 	 */
 	public void lanzarDados() throws InterruptedException {
@@ -144,15 +144,14 @@ public class ControlJuego {
 			@Override
 			public synchronized void run() {
 				mover = this;
-//				dado1 = dado.caraDado();
-				dado1 = 60;
+				dado1 = dado.caraDado();
 
 				switch (turno) {
 
 				case 1:
 
 					if (j1.getPosicion() + dado1 > 100)
-						dado1 = (100 - j1.getPosicion());
+						dado1 = 100 - j1.getPosicion();
 
 					j1.setPosicion(dado1);
 
@@ -166,7 +165,6 @@ public class ControlJuego {
 
 					else if (casilla[1])
 						j1.serpiente();
-					System.out.println("J1 " + j1.getPosicion());
 
 					try {
 						wait();
@@ -184,7 +182,7 @@ public class ControlJuego {
 				case 2:
 
 					if (j2.getPosicion() + dado1 > 100)
-						dado1 = (100 - j2.getPosicion());
+						dado1 = 100 - j2.getPosicion();
 
 					j2.setPosicion(dado1);
 
@@ -197,7 +195,6 @@ public class ControlJuego {
 						j2.escalera();
 					else if (casilla1[1])
 						j2.serpiente();
-					System.out.println("J2 " + j2.getPosicion());
 
 					try {
 						wait();
@@ -217,7 +214,7 @@ public class ControlJuego {
 				case 3:
 
 					if (j3.getPosicion() + dado1 > 100)
-						dado1 = (100 - j3.getPosicion());
+						dado1 = 100 - j3.getPosicion();
 
 					j3.setPosicion(dado1);
 
@@ -230,8 +227,6 @@ public class ControlJuego {
 						j3.escalera();
 					else if (casilla2[1])
 						j3.serpiente();
-
-					System.out.println("J3 " + j3.getPosicion());
 
 					try {
 						wait();
@@ -309,16 +304,12 @@ public class ControlJuego {
 
 	/**
 	 * Checks if is win. Metodo encargado de determinar si hay un ganador del juego
-	 * 
+	 *
 	 * @return true, if is win
 	 */
 	public boolean isWin() {
 
-		if (j1.getPosicion() == 100) {
-			return true;
-		} else if (j2.getPosicion() == 100) {
-			return true;
-		} else if (j3.getPosicion() == 100) {
+		if (j1.getPosicion() == 100 || j2.getPosicion() == 100 || j3.getPosicion() == 100) {
 			return true;
 		}
 
@@ -419,11 +410,16 @@ public class ControlJuego {
 	/**
 	 * Sets the terminar. Metodo usado para bajar la bandera de terminacion de los
 	 * hilos.
-	 * 
-	 * @param terminar the new terminar
 	 */
-	public void setTerminar(boolean terminar) {
-		this.terminar = terminar;
+	public void notificar() {
+		if (n2.getState() != State.TERMINATED)
+			synchronized (j2) {
+				j2.notify();
+			}
+		if (n3.getState() != State.TERMINATED)
+			synchronized (j3) {
+				j3.notify();
+			}
 	}
 
 	/**

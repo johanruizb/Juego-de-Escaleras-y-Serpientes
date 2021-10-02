@@ -48,8 +48,6 @@ public class PanelJugadores extends JPanel implements Runnable {
 	/** The escaleras. */
 	private ArrayList<ArrayList<Integer>> escaleras = new ArrayList<>();
 
-	/** The dis. */
-
 	/** The x 1. */
 	private Thread animacion, reinicio;
 

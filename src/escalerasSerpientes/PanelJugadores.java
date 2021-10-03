@@ -39,9 +39,6 @@ public class PanelJugadores extends JPanel implements Runnable {
 	// Tableros
 	private ArrayList<Integer> limites = new ArrayList<>(Arrays.asList(368, 288, 208, 128, 48));
 
-	/** The limites 2. */
-	private ArrayList<Integer> limites2 = new ArrayList<>(Arrays.asList(368, 328, 288, 248, 208, 168, 128, 88, 48, 8));
-
 	/** The serpientes. */
 	private ArrayList<ArrayList<Integer>> serpientes = new ArrayList<>();
 

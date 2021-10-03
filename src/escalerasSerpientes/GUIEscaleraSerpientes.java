@@ -169,7 +169,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
+
 				Scene scene = initScene();
 				panelsonido.setScene(scene);
 			}
@@ -218,7 +218,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 	 * Adds the tablero. Añade las casillas al panel del tablero, se añaden 1 por 1.
 	 */
 	private void addTablero() {
-		// TODO Auto-generated method stub
+
 		ArrayList<ArrayList<Integer>> tablero = control.getTablero();
 		int k = 0;
 		for (int i = 0; i < 10; i++) {
@@ -278,7 +278,6 @@ public class GUIEscaleraSerpientes extends JFrame {
 	 * @return the array list
 	 */
 	private ArrayList<ArrayList<Integer>> posicionEscaleras() {
-		// TODO Auto-generated method stub
 
 		ArrayList<ArrayList<Integer>> tablero = control.getTablero();
 		ArrayList<ArrayList<Integer>> escaleras = new ArrayList<>();
@@ -323,7 +322,6 @@ public class GUIEscaleraSerpientes extends JFrame {
 	 * @return the array list
 	 */
 	private ArrayList<ArrayList<Integer>> posicionSerpientes() {
-		// TODO Auto-generated method stub
 
 		ArrayList<ArrayList<Integer>> tablero = control.getTablero();
 		ArrayList<ArrayList<Integer>> serpientes = new ArrayList<>();
@@ -383,7 +381,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 		 */
 		@Override
 		public synchronized void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+
 			if (e.getSource() == dado && tirar && !control.isWin()) {
 				tirar = false;
 				botonReiniciar.setEnabled(false);
@@ -391,7 +389,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 					control.initNPC();
 					control.lanzar();
 				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
+
 					e1.printStackTrace();
 				}
 
@@ -410,7 +408,6 @@ public class GUIEscaleraSerpientes extends JFrame {
 		 * @param jugador the jugador
 		 */
 		private void lanzarDado(int jugador) {
-			// TODO Auto-generated method stub
 
 			mover = new Thread(new Runnable() {
 
@@ -483,13 +480,11 @@ public class GUIEscaleraSerpientes extends JFrame {
 		 * juego.
 		 */
 		private void reinicio() {
-			// TODO Auto-generated method stub
 
 			reiniciarVentana = new Thread(new Runnable() {
 
 				@Override
 				public synchronized void run() {
-					// TODO Auto-generated method stub
 
 					capas.setVisible(false);
 					componentes.setVisible(false);
@@ -534,7 +529,7 @@ public class GUIEscaleraSerpientes extends JFrame {
 						repaint();
 						revalidate();
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
+
 						e.printStackTrace();
 					}
 

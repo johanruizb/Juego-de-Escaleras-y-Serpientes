@@ -100,7 +100,6 @@ public class PanelJugadores extends JPanel implements Runnable {
 					}
 
 					while (animacion.getState() != State.TERMINATED) {
-						System.out.println("Terminando..");
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {
@@ -228,22 +227,18 @@ public class PanelJugadores extends JPanel implements Runnable {
 		boolean tope = false;
 
 		int altura = p[targetJugador][1];
-		int mov = 0;
+		int mov = 0, mov2 = 0;
 
 		while (!(mov == n)) {
 
-			if (limites.contains(p[targetJugador][1]) && p[targetJugador][0] < 368) {
+			if (limites.contains(p[targetJugador][1]) && p[targetJugador][0] < 368 && !tope) {
+				mov2++;
 				p[targetJugador][0]++;
-
 			} else if (!limites.contains(p[targetJugador][1]) && p[targetJugador][0] > 8 && !tope) {
+				mov2--;
 				p[targetJugador][0]--;
-
 			} else {
 				tope = true;
-			}
-
-			if (limites2.contains(p[targetJugador][0]) && !tope) {
-				mov++;
 			}
 
 			if (tope && altura - p[targetJugador][1] < 40) {
@@ -251,6 +246,11 @@ public class PanelJugadores extends JPanel implements Runnable {
 			} else if (altura - p[targetJugador][1] == 40) {
 				tope = false;
 				altura = p[targetJugador][1];
+				mov++;
+			}
+
+			if (mov2 == 40 || mov2 == -40) {
+				mov2 = 0;
 				mov++;
 			}
 
@@ -271,10 +271,7 @@ public class PanelJugadores extends JPanel implements Runnable {
 				target[0] = list1.get(2);
 				target[1] = list1.get(3);
 
-				try {
-					animarObjetos();
-				} catch (ArrayIndexOutOfBoundsException e) {
-				}
+				animarObjetos();
 				break;
 			}
 		}
@@ -285,10 +282,8 @@ public class PanelJugadores extends JPanel implements Runnable {
 				target[0] = list1.get(2);
 				target[1] = list1.get(3);
 
-				try {
-					animarObjetos();
-				} catch (ArrayIndexOutOfBoundsException e) {
-				}
+				animarObjetos();
+
 				break;
 			}
 		}
@@ -310,9 +305,6 @@ public class PanelJugadores extends JPanel implements Runnable {
 	 *                                        exception
 	 */
 	private void animarObjetos() throws ArrayIndexOutOfBoundsException {
-
-		System.out.println("X " + target[0]);
-		System.out.println("Y " + target[1]);
 
 		while (!(p[targetJugador][0] == target[0] && p[targetJugador][1] == target[1])) {
 

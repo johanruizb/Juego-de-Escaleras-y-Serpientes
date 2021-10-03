@@ -311,9 +311,6 @@ public class PanelJugadores extends JPanel implements Runnable {
 	 */
 	private void animarObjetos() throws ArrayIndexOutOfBoundsException {
 
-		System.out.println("X " + target[0]);
-		System.out.println("Y " + target[1]);
-
 		while (!(p[targetJugador][0] == target[0] && p[targetJugador][1] == target[1])) {
 
 			if (p[targetJugador][0] < target[0] && p[targetJugador][0] < 368) {

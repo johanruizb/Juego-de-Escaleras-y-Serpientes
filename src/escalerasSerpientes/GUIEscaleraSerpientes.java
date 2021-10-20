@@ -19,11 +19,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-
 // TODO: Auto-generated Javadoc
 /**
  * The Class GUIEscaleraSerpientes.
@@ -51,11 +46,8 @@ public class GUIEscaleraSerpientes extends JFrame {
 	/** The escucha. */
 	private Escucha escucha;
 
-	/** The escuchaplay. */
-	private EscuchaPlay escuchaplay;
-
 	/** The boton reiniciar. */
-	private JButton dado, reproducir, salir, botonReiniciar;
+	private JButton dado, salir, botonReiniciar;
 
 	/** The capas. */
 	private JLayeredPane capas = new JLayeredPane();
@@ -63,14 +55,8 @@ public class GUIEscaleraSerpientes extends JFrame {
 	/** The control. */
 	private ControlJuego control;
 
-	/** The play. */
-	private MediaPlay play;
-
 	/** The ruta. */
 	private String ruta;
-
-	/** The contador. */
-	private static int contador = 1;
 
 	/**
 	 * Instantiates a new GUI escalera serpientes.
@@ -79,8 +65,6 @@ public class GUIEscaleraSerpientes extends JFrame {
 
 		// TODO Auto-generated method stub
 		initGUI();
-
-		play.reproducir();
 
 		this.setTitle("Esacaleras y Serpientes");
 		this.setVisible(true);
@@ -96,7 +80,6 @@ public class GUIEscaleraSerpientes extends JFrame {
 	private void initGUI() {
 
 		escucha = new Escucha();
-		escuchaplay = new EscuchaPlay();
 		control = new ControlJuego(this);
 
 		capas.setSize(500, 500);
@@ -160,31 +143,6 @@ public class GUIEscaleraSerpientes extends JFrame {
 		botonReiniciar.setBorder(null);
 		botonReiniciar.setContentAreaFilled(false);
 
-		// REPRODUCTOR
-		JFXPanel panelsonido = new JFXPanel();
-		panelsonido.setVisible(false);
-
-		play = new MediaPlay(aleatorio());
-
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-
-				Scene scene = initScene();
-				panelsonido.setScene(scene);
-			}
-		});
-
-		// BORON DE REPRODUCCION
-		reproducir = new JButton(new ImageIcon("src/imagenes/on.png"));
-		reproducir.addActionListener(escuchaplay);
-		reproducir.setBorder(null);
-		reproducir.setContentAreaFilled(false);
-
-		// AÑADIR BOTONES
-		botones.add(panelsonido);
-		botones.add(reproducir);
-
 		JLabel l1 = new JLabel();
 		l1.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
 		botones.add(l1);
@@ -237,17 +195,6 @@ public class GUIEscaleraSerpientes extends JFrame {
 				k++;
 			}
 		}
-	}
-
-	/**
-	 * Inits the scene. Inicia la escena. Necesaria para reproducir la musica.
-	 *
-	 * @return the scene
-	 */
-	private static Scene initScene() {
-		Group root = new Group();
-		Scene scene = new Scene(root, javafx.scene.paint.Color.ALICEBLUE);
-		return scene;
 	}
 
 	/**
@@ -538,35 +485,6 @@ public class GUIEscaleraSerpientes extends JFrame {
 			});
 
 			reiniciarVentana.start();
-		}
-
-	}
-
-	/**
-	 * The Class EscuchaPlay. Clase encargada de la reproduccion de la musica
-	 */
-//CLASE PARA EL MANEJO DE LA REPRODUCCION DE LA MUSICA
-	private class EscuchaPlay implements ActionListener {
-
-		/**
-		 * Action performed.
-		 *
-		 * @param e the e
-		 */
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == reproducir) {
-				if (contador == 1) {
-					contador++;
-					reproducir.setIcon(new ImageIcon("src/imagenes/off.png"));
-					play.pausar();
-				} else if (contador == 2) {
-					contador = 1;
-					reproducir.setIcon(new ImageIcon("src/imagenes/on.png"));
-					play.reproducir();
-				}
-			}
-
 		}
 
 	}
